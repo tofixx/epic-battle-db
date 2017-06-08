@@ -1,24 +1,14 @@
-
-#include <sstream>
-#include <vector>
 #include <iostream>
 #include "table.h"
 
-tree_streambuf::tree_streambuf()
+Table::Table()
 {
-    setp(nullptr, nullptr);
+    // setup    
+    std::cout << "setup..." << std::endl;
 }
 
-void tree_streambuf::add_sink(std::streambuf *streambuf)
+void Table::insert()
 {
-    this->streams.push_back(streambuf);
-};
-
-tree_streambuf::int_type tree_streambuf::overflow(tree_streambuf::int_type ch)
-{
-    for (auto stream:streams)
-    {
-        stream->sputc(ch);
-    }
-    return ch;
+    // insert...
+    std::cout << "insert..." << std::endl;
 }
