@@ -1,7 +1,7 @@
 #include <iostream>
 #include "table.h"
 
-Table::Table()
+Table::Table(int rows, int cols, int type)
 {
     // setup    
     std::cout << "setup..." << std::endl;
