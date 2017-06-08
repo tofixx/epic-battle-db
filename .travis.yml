@@ -44,6 +44,11 @@ compiler:
 script: ./run.sh
 
 notifications:
-  email: false
+  slack: 
+    rooms:
+      - hpi:JSCeiOtM3VFHnG1Pj7mr56fn#tukldatalayout
+    on_success: change
+    on_error: change
+    
 
 sudo: false
