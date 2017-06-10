@@ -3,7 +3,7 @@ project (Task1.1)
 set (CMAKE_CXX_STANDARD 14)
 
 # compile & link
-add_library (table sources/table.cpp)
+add_library (table sources/table.cpp sources/rowStoreTable.cpp sources/columnStoreTable.cpp)
 add_executable (run tests/tests.cpp)
 target_link_libraries (run table)
 

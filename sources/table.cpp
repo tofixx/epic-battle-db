@@ -1,11 +1,14 @@
 #include <iostream>
 #include "table.h"
 
-Table::Table(int rows, int cols, int type)
+Table::Table(int maxRows, int maxColumns)
+  : m_maxRows(maxRows)
+  , m_maxColumns(maxColumns)
 {
-    // setup    
-    std::cout << "setup..." << std::endl;
+    m_data = new int[maxColumns * maxRows];
 }
+
+Table::~Table() {};
 
 void Table::insert()
 {
