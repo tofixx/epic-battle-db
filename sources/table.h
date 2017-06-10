@@ -12,7 +12,7 @@ public:
     /**
      * Fills the first rows with data
      */
-    void virtual generateData(int32_t rows, uint32_t* distinctValues) = 0;
+    virtual void generateData(int32_t rows, uint32_t* distinctValues) = 0;
     void insert();
 
 protected:
