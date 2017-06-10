@@ -9,6 +9,9 @@ public:
     Table(int32_t maxRows, int32_t maxColumns);
     virtual ~Table();
 
+    /**
+     * Fills the first rows with data
+     */
     void virtual generateData(int32_t rows, int32_t* distinctValues) = 0;
     void insert();
 
