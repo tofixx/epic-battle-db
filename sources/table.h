@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <random>
 
 class Table
 {
@@ -12,9 +13,12 @@ public:
     void insert();
 
 protected:
+    static int* generateDistinctValues(int32_t numberOfDistinctValues);
     int32_t * m_data;
     int32_t m_maxRows;
     int32_t m_maxColumns;
 private:
-
+    static std::random_device randomDevice;
+    static std::mt19937 randomGenerator;
+    static std::uniform_int_distribution<> randomDistribution;
 };
