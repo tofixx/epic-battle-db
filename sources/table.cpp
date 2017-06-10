@@ -25,7 +25,9 @@ std::uniform_int_distribution<> Table::randomDistribution = std::uniform_int_dis
 
 int* Table::generateDistinctValues(int32_t numberOfDistinctValues) {
     int32_t* distinctValues = new int32_t[numberOfDistinctValues];
-    for (auto i = 0; i < numberOfDistinctValues; i++) {
+
+    for (int i = 0; i < numberOfDistinctValues; i++) {
+        Table::randomDistribution(Table::randomGenerator);
         distinctValues[i] = Table::randomDistribution(Table::randomGenerator);
         // TODO: should check if really distinct
     }
