@@ -17,6 +17,6 @@ void ColumnStoreTable::generateData(int32_t rows, uint32_t* distinctValues)
             auto valueIndex = rand() % distinctValues[columnIndex];
             m_data[columnIndex * m_maxRows + rowIndex] = columnValues[valueIndex];
         }
-
+        // clear
     }
 }
