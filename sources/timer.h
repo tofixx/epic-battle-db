@@ -11,6 +11,8 @@ public:
 
 	}
 
+	virtual ~TimeTimer() = default;
+
  template<typename F, typename ...Args>
     typename TimeT::rep measure(F func, Args&&... args)
     {

@@ -2,21 +2,22 @@
 
 #include <stdlib.h>
 
-ColumnStoreTable::ColumnStoreTable(int32_t maxRows, int32_t maxColumns)
-    :Table(maxRows, maxColumns)
+ColumnStoreTable::ColumnStoreTable(int32_t maxRows, int32_t columns)
+    :Table(maxRows, columns)
 {
 
 }
 
 void ColumnStoreTable::generateData(int32_t rows, uint32_t* distinctValues)
 {
-    for (auto columnIndex = 0; columnIndex < m_maxColumns; columnIndex++) {
+    for (auto columnIndex = 0; columnIndex < m_columns; columnIndex++) {
+
         auto columnValues = Table::generateDistinctValues(distinctValues[columnIndex]);
 
         for (auto rowIndex = 0; rowIndex < rows; rowIndex++) {
             auto valueIndex = rand() % distinctValues[columnIndex];
             m_data[columnIndex * m_maxRows + rowIndex] = columnValues[valueIndex];
         }
-        // clear
+        delete[] columnValues;
     }
 }
