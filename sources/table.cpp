@@ -1,13 +1,13 @@
-#include "table.h"
-
 #include <iostream>
 #include <limits>
+
+#include "table.h"
 
 Table::Table(int maxRows, int columns)
   : m_maxRows(maxRows)
   , m_columns(columns)
 {
-    m_data = new int[m_columns * maxRows];
+    m_data = new int[maxRows * columns];
 }
 
 Table::~Table() 
@@ -21,6 +21,14 @@ void Table::insert()
     std::cout << "insert..." << std::endl;
 }
 
+
+void Table::print(int32_t firstRow, int32_t lastRow)
+{
+    for(;firstRow<lastRow;++firstRow)
+    {
+        print_row(firstRow);
+    }
+}
 
 std::random_device Table::randomDevice;
 std::mt19937 Table::randomGenerator = std::mt19937(Table::randomDevice()); // seed the generator

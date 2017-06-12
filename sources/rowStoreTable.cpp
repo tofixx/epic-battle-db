@@ -1,5 +1,6 @@
-#include "rowStoreTable.h"
+#include <iostream>
 
+#include "rowStoreTable.h"
 
 RowStoreTable::RowStoreTable(int32_t maxRows, int32_t columns)
     :Table(maxRows, columns)
@@ -21,4 +22,15 @@ void RowStoreTable::generateData(int32_t rows, uint32_t* distinctValues)
 
         delete[] columnValues;
     }
+}
+
+void RowStoreTable::print_row(int32_t row)
+{
+    std::cout << "col_"<< row <<"[";
+    for(auto i = 0; i < m_columns; ++i)
+    {
+        std::cout << m_data[row * m_columns + i];
+        if(i<(m_columns-1)) std::cout << ", ";
+    }
+    std::cout << "]" << std::endl;
 }

@@ -14,6 +14,7 @@ void test_create_column_table(){
 
 	ColumnStoreTable t = ColumnStoreTable(100, 20);
 	t.generateData(20, distinct20);
+	t.print(0,20);
 }
 
 void test_create_row_table(){
@@ -22,6 +23,7 @@ void test_create_row_table(){
 
 	RowStoreTable t = RowStoreTable(100, 20);
 	t.generateData(20, distinct20);
+	t.print(0,20);
 }
 
 int main(int argc, char const * argv[])
