@@ -5,22 +5,36 @@
 
 /* time tracking */
 
-template<typename TimeT = std::chrono::high_resolution_clock>
-struct measure
+template<typename TimeT = std::chrono::nanoseconds, typename ClockT = std::chrono::high_resolution_clock>
+class TimeTimer
 {
-    template<typename F, typename ...Args>
-    static typename TimeT::rep execution(F func, Args&&... args, int executionTimes)
-    {
-        auto start = TimeT::now();
+public:
+	TimeTimer(int executionTimes)
+	: m_executionTimes(executionTimes)
+	{
 
-		for(auto i = 0; i < executionTimes; ++i)
+	}
+
+ template<typename F, typename ...Args>
+    typename TimeT::rep measure(F func, Args&&... args)
+    {
+		std::cout << "run " << func << " for " << m_executionTimes << " times..." << std::endl;
+        
+		auto start = ClockT::now();
+		
+		for(auto i = 0; i < m_executionTimes; ++i)
 		{
         	func(std::forward<Args>(args)...);
 		}
 
-        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(TimeT::now() - start).count();
-        return duration / executionTimes;
+        auto duration = std::chrono::duration_cast<TimeT>(ClockT::now() - start).count();
+
+        return duration / m_executionTimes;
     }
+
+private:
+	int m_executionTimes;
+   
 };
 
 /* test methods */
@@ -48,7 +62,8 @@ int main(int argc, char const * argv[])
 	test_create_column_table();
 	test_create_row_table();
 	// time measuring sample
-	std::cout << "create column table: " << std::endl << measure<>::execution(test_create_column_table, 10) << " ns" << std::endl;
-	std::cout << "create row table: " << std::endl << measure<>::execution(test_create_row_table, 10) << " ns" << std::endl;
+	TimeTimer<> timer = TimeTimer<>(10);
+	std::cout << std::endl << timer.measure(test_create_column_table) << " ns average time per call" << std::endl;
+	std::cout << std::endl << timer.measure(test_create_row_table) << " ns average time per call" << std::endl;
 
 }
