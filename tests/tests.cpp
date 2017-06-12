@@ -1,4 +1,6 @@
 #include <iostream>
+#include <chrono>
+
 #include "../sources/table.h"
 #include "../sources/columnStoreTable.h"
 #include "../sources/rowStoreTable.h"
