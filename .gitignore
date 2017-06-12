@@ -33,6 +33,7 @@
 
 # Exclude build folder
 _build
+build
 
 # Exclude IDE
 .vscode
