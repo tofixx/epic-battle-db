@@ -8,6 +8,12 @@ ColumnStoreTable::ColumnStoreTable(int32_t maxRows, int32_t columns)
 
 }
 
+
+int32_t & ColumnStoreTable::getLocation(const int32_t &row, const int32_t &column)
+{
+    return m_data[column*m_maxRows+row];   
+}
+
 void ColumnStoreTable::generateData(int32_t rows, uint32_t* distinctValues)
 {
     for (auto columnIndex = 0; columnIndex < m_columns; columnIndex++) {

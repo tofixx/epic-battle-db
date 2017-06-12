@@ -1,7 +1,9 @@
-#include "table.h"
-
 #include <iostream>
 #include <limits>
+
+#include "table.h"
+#include "positionList.h"
+
 
 Table::Table(int maxRows, int columns)
   : m_maxRows(maxRows)
@@ -19,6 +21,20 @@ void Table::insert()
 {
     // insert...
     std::cout << "insert..." << std::endl;
+}
+
+/// <returns>return value on heap!</returns>
+PositionList<int32_t>* Table::table_eq_scan(const int32_t &column_id, const int32_t &value)
+{
+    auto* list = new PositionList<int32_t>();
+    for(auto row = 0; row < m_maxRows; ++row)
+    {
+        if(*reinterpret_cast<int32_t*>(getLocation(row, column_id)) == value)
+        {
+            list->add(row);
+        }
+    }
+    return list;
 }
 
 

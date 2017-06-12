@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include <random>
 
+#include "positionList.h"
+
 class Table
 {
 public:
@@ -14,6 +16,10 @@ public:
      */
     virtual void generateData(int32_t rows, uint32_t* distinctValues) = 0;
     void insert();
+
+    virtual int32_t & getLocation(const int32_t &row, const int32_t &column) = 0;
+    PositionList<int32_t> *table_eq_scan(const int32_t &column_id, const int32_t &value);
+    //struct Table *position_list_materialize(struct PositionList *ps, int num_columns, int *column_ids);
 
 protected:
     static int* generateDistinctValues(int32_t numberOfDistinctValues);
