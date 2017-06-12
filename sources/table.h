@@ -6,7 +6,7 @@
 class Table
 {
 public:
-    Table(int32_t maxRows, int32_t maxColumns);
+    Table(int32_t maxRows, int32_t columns);
     virtual ~Table();
 
     /**
@@ -19,7 +19,7 @@ protected:
     static int* generateDistinctValues(int32_t numberOfDistinctValues);
     int32_t * m_data;
     int32_t m_maxRows;
-    int32_t m_maxColumns;
+    int32_t m_columns;
 private:
     static std::random_device randomDevice;
     static std::mt19937 randomGenerator;
