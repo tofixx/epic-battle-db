@@ -8,6 +8,7 @@
 
 /* test methods */
 
+// week 1
 void test_create_column_table(){
 	std::cout << "create column table... " << std::endl;
 	uint32_t distinct20 [20] = { 14, 16, 15, 8, 14, 13, 12, 11, 1, 13, 17, 17, 12, 3, 16, 6, 17, 20, 3, 13  };
@@ -24,15 +25,37 @@ void test_create_row_table(){
 	t.generateData(20, distinct20);
 }
 
+// week 2
+void test_scan_row_table() {
+    uint32_t distinct20[20] = {14, 16, 15, 8, 14, 13, 12, 11, 1, 13, 17, 17, 12, 3, 16, 6, 17, 20, 3, 13};
+
+    RowStoreTable t = RowStoreTable(1000, 20);
+    t.generateData(800, distinct20);
+
+    int32_t search_key = 2;
+    int32_t column = 3;
+    auto list = t.table_eq_scan(column, search_key);
+
+    for (auto it = list->m_positions.begin(); it != list->m_positions.end(); ++it) {
+        if (t.getLocation(*it, column) != search_key) {
+            std::cout << "ERROR: wrong result: " << *it << " expected " << search_key << std::endl;
+        }
+    }
+}
+
 int main(int argc, char const * argv[])
 {
 	/* week 1 tests */
 	// data creation sample
 	test_create_column_table();
 	test_create_row_table();
+
 	// time measuring sample
 	TimeTimer<> timer = TimeTimer<>(10);
 	std::cout << std::endl << timer.measure(test_create_column_table) << " ns average time per call" << std::endl;
 	std::cout << std::endl << timer.measure(test_create_row_table) << " ns average time per call" << std::endl;
+
+    /* week 2 tests */
+    test_scan_row_table();
 
 }

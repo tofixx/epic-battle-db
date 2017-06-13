@@ -9,7 +9,7 @@ RowStoreTable::RowStoreTable(int32_t maxRows, int32_t columns)
 
 int32_t & RowStoreTable::getLocation(const int32_t &row, const int32_t &column)
 {
-    return m_data[row*m_columns+column];   
+    return m_data[row * m_columns + column];
 }
 
 void RowStoreTable::generateData(int32_t rows, uint32_t* distinctValues)

@@ -9,7 +9,7 @@ Table::Table(int maxRows, int columns)
   : m_maxRows(maxRows)
   , m_columns(columns)
 {
-    m_data = new int[m_columns * maxRows];
+    m_data = new int32_t[m_columns * maxRows];
 }
 
 Table::~Table() 
@@ -29,7 +29,7 @@ PositionList<int32_t>* Table::table_eq_scan(const int32_t &column_id, const int3
     auto* list = new PositionList<int32_t>();
     for(auto row = 0; row < m_maxRows; ++row)
     {
-        if(*reinterpret_cast<int32_t*>(getLocation(row, column_id)) == value)
+        if (getLocation(row, column_id) == value)
         {
             list->add(row);
         }
@@ -46,9 +46,12 @@ int* Table::generateDistinctValues(int32_t numberOfDistinctValues) {
     int32_t* distinctValues = new int32_t[numberOfDistinctValues];
 
     for (int i = 0; i < numberOfDistinctValues; i++) {
-        Table::randomDistribution(Table::randomGenerator);
-        distinctValues[i] = Table::randomDistribution(Table::randomGenerator);
+        //Table::randomDistribution(Table::randomGenerator);
+        //distinctValues[i] = Table::randomDistribution(Table::randomGenerator);
         // TODO: should check if really distinct
+
+        // alternative:
+        distinctValues[i] = i;
     }
     return distinctValues;
 }
