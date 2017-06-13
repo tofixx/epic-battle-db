@@ -40,6 +40,10 @@ void test_scan_row_table() {
         if (t.getLocation(*it, column) != search_key) {
             std::cout << "ERROR: wrong result: " << *it << " expected " << search_key << std::endl;
         }
+		else
+		{
+			std::cout << "correct result: " << *it << " expected " << search_key << std::endl;
+		}
     }
 }
 
