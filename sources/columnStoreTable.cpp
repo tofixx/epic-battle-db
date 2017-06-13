@@ -12,10 +12,10 @@ void ColumnStoreTable::generateData(int32_t rows, uint32_t* distinctValues)
 {
     for (auto columnIndex = 0; columnIndex < m_columns; columnIndex++) {
 
-        auto columnValues = Table::generateDistinctValues(distinctValues[columnIndex]);
+        const auto columnValues = Table::generateDistinctValues(distinctValues[columnIndex]);
 
         for (auto rowIndex = 0; rowIndex < rows; rowIndex++) {
-            auto valueIndex = rand() % distinctValues[columnIndex];
+            const auto valueIndex = rand() % distinctValues[columnIndex];
             m_data[columnIndex * m_maxRows + rowIndex] = columnValues[valueIndex];
         }
         delete[] columnValues;

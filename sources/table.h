@@ -18,8 +18,8 @@ public:
 protected:
     static int* generateDistinctValues(int32_t numberOfDistinctValues);
     int32_t * m_data;
-    int32_t m_maxRows;
-    int32_t m_columns;
+    const int32_t m_maxRows;
+    const int32_t m_columns;
 private:
     static std::random_device randomDevice;
     static std::mt19937 randomGenerator;
