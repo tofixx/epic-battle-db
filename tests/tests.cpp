@@ -38,11 +38,11 @@ void test_scan_row_table() {
 
     for (auto it = list->m_positions.begin(); it != list->m_positions.end(); ++it) {
         if (t.getLocation(*it, column) != search_key) {
-            std::cout << "ERROR: wrong result: " << *it << " expected " << search_key << std::endl;
+            std::cout << "ERROR: wrong result: pos  " << *it << " value " << t.getLocation(*it, column) << " expected " << search_key << std::endl;
         }
 		else
 		{
-			std::cout << "correct result: " << *it << " expected " << search_key << std::endl;
+			std::cout << "correct result: pos  " << *it << " value " << t.getLocation(*it, column) << " expected " << search_key << std::endl;
 		}
     }
 }

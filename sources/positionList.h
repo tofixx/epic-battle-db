@@ -20,5 +20,10 @@ public:
         this->m_positions.insert(value);
     }
 
+    int32_t size()
+    {
+        return this->m_positions.size();
+    }
+
     std::unordered_set<T> m_positions;
 };

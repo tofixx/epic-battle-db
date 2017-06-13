@@ -19,7 +19,7 @@ public:
 
     virtual int32_t & getLocation(const int32_t &row, const int32_t &column) = 0;
     PositionList<int32_t> *table_eq_scan(const int32_t &column_id, const int32_t &value);
-    //struct Table *position_list_materialize(struct PositionList *ps, int num_columns, int *column_ids);
+    Table *position_list_materialize(const &PositionList positions, const int32_t columns, const int32_t *column_ids) = 0;
 
 protected:
     static int* generateDistinctValues(int32_t numberOfDistinctValues);
