@@ -42,15 +42,21 @@ std::random_device Table::randomDevice;
 std::mt19937 Table::randomGenerator = std::mt19937(Table::randomDevice()); // seed the generator
 std::uniform_int_distribution<> Table::randomDistribution = std::uniform_int_distribution<>(std::numeric_limits<int32_t>::lowest(), std::numeric_limits<int32_t>::max()); // define the range
 
+int* Table::generateRandomDistinctValues(int32_t numberOfDistinctValues) {
+    int32_t* distinctValues = new int32_t[numberOfDistinctValues];
+
+    for (int i = 0; i < numberOfDistinctValues; i++) {
+        int32_t new_value = Table::randomDistribution(Table::randomGenerator);
+        // TODO: should check if really distinct
+        distinctValues[i] = new_value;
+    }
+    return distinctValues;
+}
+
 int* Table::generateDistinctValues(int32_t numberOfDistinctValues) {
     int32_t* distinctValues = new int32_t[numberOfDistinctValues];
 
     for (int i = 0; i < numberOfDistinctValues; i++) {
-        //Table::randomDistribution(Table::randomGenerator);
-        //distinctValues[i] = Table::randomDistribution(Table::randomGenerator);
-        // TODO: should check if really distinct
-
-        // alternative:
         distinctValues[i] = i;
     }
     return distinctValues;
