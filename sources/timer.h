@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 
 template<typename TimeT = std::chrono::nanoseconds, typename ClockT = std::chrono::high_resolution_clock>
 class TimeTimer
@@ -9,6 +10,8 @@ public:
 	{
 
 	}
+
+	virtual ~TimeTimer() = default;
 
  template<typename F, typename ...Args>
     typename TimeT::rep measure(F func, Args&&... args)
