@@ -15,21 +15,22 @@ int32_t & ColumnStoreTable::getLocation(const int32_t &row, const int32_t &colum
 }
 
 /// return value on heap!
-Table* Table::position_list_materialize(const &PositionList positions, const int32_t columns, const int32_t *column_ids)
+Table* ColumnStoreTable::position_list_materialize(PositionList<int32_t> &positions, const int32_t columns, const int32_t *column_ids)
 {
-    Table table = new RowStoreTable(positions.size(), columns);
+    ColumnStoreTable table = ColumnStoreTable(positions.size(), columns);
 
-    for (auto row = list->m_positions.begin(); row != list->m_positions.end(); ++row) 
+    for (auto row = positions.m_positions.begin(); row != positions.m_positions.end(); ++row)
     {
         std::vector<int32_t> copy_row(columns);
-        for(auto column = columns_ids[0]; column < columns; ++column)
+        for(auto column = column_ids[0]; column < columns; ++column)
         {
-            copy_row.insert(this->getLocation(*row, column));
+            copy_row.push_back(this->getLocation(*row, column));
         }
-        table.insert(copy_row);
+        // TODO:
+        // table.insert(copy_row);
     }
 
-    return table;
+    return &table;
 }
 
 void ColumnStoreTable::generateData(int32_t rows, uint32_t* distinctValues)

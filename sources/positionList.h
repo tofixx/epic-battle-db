@@ -22,7 +22,7 @@ public:
 
     int32_t size()
     {
-        return this->m_positions.size();
+        return m_positions.size();
     }
 
     std::unordered_set<T> m_positions;
