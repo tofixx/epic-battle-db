@@ -13,7 +13,7 @@ public:
      * Fills the first rows with data
      */
     virtual void generateData(int32_t rows, uint32_t* distinctValues) = 0;
-    void insert();
+    virtual void insert(int * values) = 0;
 
 protected:
     static int* generateDistinctValues(int32_t numberOfDistinctValues);

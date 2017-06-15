@@ -20,3 +20,8 @@ void ColumnStoreTable::generateData(int32_t rows, uint32_t* distinctValues)
 
     }
 }
+
+void ColumnStoreTable::insert(int * values)
+{
+    // TODO write insert
+}

@@ -9,4 +9,5 @@ public:
     virtual ~ColumnStoreTable() = default;
 
     void generateData(int32_t rows, uint32_t* distinctValues) override;
+    void insert(int * values) override;
 };

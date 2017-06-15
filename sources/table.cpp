@@ -12,7 +12,7 @@ Table::Table(int maxRows, int maxColumns)
 
 Table::~Table() {};
 
-void Table::insert()
+void Table::insert(int * values)
 {
     // insert...
     std::cout << "insert..." << std::endl;
