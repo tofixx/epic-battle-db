@@ -63,6 +63,36 @@ void test_scan_col_table() {
     std::cout << "check col store scan DONE" << std::endl;
 }
 
+void test_materialize_col_table() {
+    uint32_t distinct20[20] = {14, 16, 15, 8, 14, 13, 12, 11, 1, 13, 17, 17, 12, 3, 16, 6, 17, 20, 3, 13};
+
+    RowStoreTable t = RowStoreTable(1000, 20);
+    t.generateData(800, distinct20);
+
+    int32_t search_key = 2;
+    int32_t column = 3;
+    auto list = t.table_eq_scan(column, search_key);
+
+    int32_t columns[3] = {0, 1, 4};
+    t.position_list_materialize(*list, 3, columns);
+    std::cout << "col store materialize executed but not checked" << std::endl;
+}
+
+void test_materialize_row_table() {
+    uint32_t distinct20[20] = {14, 16, 15, 8, 14, 13, 12, 11, 1, 13, 17, 17, 12, 3, 16, 6, 17, 20, 3, 13};
+
+    ColumnStoreTable t = ColumnStoreTable(1000, 20);
+    t.generateData(800, distinct20);
+
+    int32_t search_key = 2;
+    int32_t column = 3;
+    auto list = t.table_eq_scan(column, search_key);
+
+    int32_t columns[3] = {0, 1, 4};
+    t.position_list_materialize(*list, 3, columns);
+    std::cout << "row store materialize executed but not checked" << std::endl;
+}
+
 int main(int argc, char const * argv[])
 {
 	/* week 1 tests */
@@ -78,5 +108,7 @@ int main(int argc, char const * argv[])
     /* week 2 tests */
     test_scan_row_table();
     test_scan_col_table();
+    test_materialize_col_table();
+    test_materialize_row_table();
 
 }

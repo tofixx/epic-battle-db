@@ -19,16 +19,28 @@ Table* ColumnStoreTable::position_list_materialize(PositionList<int32_t> &positi
 {
     ColumnStoreTable table = ColumnStoreTable(positions.size(), columns);
 
+    // row wise
     for (auto row = positions.m_positions.begin(); row != positions.m_positions.end(); ++row)
     {
         std::vector<int32_t> copy_row(columns);
-        for(auto column = column_ids[0]; column < columns; ++column)
+        for(auto column = 0; column < columns; ++column)
         {
-            copy_row.push_back(this->getLocation(*row, column));
+            copy_row.push_back(this->getLocation(*row, column_ids[column]));
         }
         // TODO:
         // table.insert(copy_row);
     }
+
+
+    // column wise
+//    for (auto column = 0; column < columns; ++column) {
+//        std::vector<int32_t> copy_column(positions.size());
+//        for (auto row = positions.m_positions.begin(); row != positions.m_positions.end(); ++row) {
+//            copy_column.push_back(this->getLocation(*row, column_ids[column]));
+//        }
+//        // TODO:
+//        // table.override(column, copy_column);
+//    }
 
     return &table;
 }

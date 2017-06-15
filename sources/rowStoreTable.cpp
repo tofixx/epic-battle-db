@@ -13,16 +13,20 @@ int32_t & RowStoreTable::getLocation(const int32_t &row, const int32_t &column)
 }
 
 /// return value on heap!
-Table *RowStoreTable::position_list_materialize(PositionList<int32_t> &positions, const int32_t columns, const int32_t *column_ids) {
+Table *RowStoreTable::position_list_materialize(PositionList<int32_t> &positions, const int32_t columns, const int32_t *column_ids)
+{
     RowStoreTable table = RowStoreTable(positions.size(), columns);
 
-    for (auto column = column_ids[0]; column < columns; ++column) {
-        std::vector<int32_t> copy_column(positions.size());
-        for (auto row = positions.m_positions.begin(); row != positions.m_positions.end(); ++row) {
-            copy_column.push_back(this->getLocation(*row, column));
+    // row wise
+    for (auto row = positions.m_positions.begin(); row != positions.m_positions.end(); ++row)
+    {
+        std::vector<int32_t> copy_row(columns);
+        for(auto column = 0; column < columns; ++column)
+        {
+            copy_row.push_back(this->getLocation(*row, column_ids[column]));
         }
         // TODO:
-        // table.override(column, copy_column);
+        // table.insert(copy_row);
     }
 
     return &table;
