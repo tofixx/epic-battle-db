@@ -49,7 +49,17 @@ void RowStoreTable::generateData(int32_t rows, uint32_t* distinctValues)
     }
 }
 
-void RowStoreTable::void insert(int * values)
+void RowStoreTable::insert(int * values)
 {
-    // TODO write insert
+    // TODO test if the size calculation is correct
+    size_t size;
+    size = sizeof(values)/sizeof(values[0]);
+
+    // should calculate the number of existing tuples + number of new tuples
+    // if that is bigger than the maxRows the transaction is stopped
+    if(num_tuples + size/m_columns > m_maxRows ) {
+        for (auto index = 0; index < size; index++) {
+            m_data[num_tuples * m_columns + index + 1] = values[index];
+        }
+    }
 }
