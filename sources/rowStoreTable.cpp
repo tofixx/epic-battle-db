@@ -57,7 +57,7 @@ void RowStoreTable::insert(int * values)
 
     // should calculate the number of existing tuples + number of new tuples
     // if that is bigger than the maxRows the transaction is stopped
-    if(num_tuples + size/m_columns > m_maxRows ) {
+    if(num_tuples + size/m_columns < m_maxRows ) {
         for (auto index = 0; index < size; index++) {
             m_data[num_tuples * m_columns + index + 1] = values[index];
         }
