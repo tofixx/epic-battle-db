@@ -42,6 +42,7 @@ void RowStoreTable::generateData(int32_t rows, uint32_t* distinctValues)
         for (auto rowIndex = 0; rowIndex < rows; rowIndex++) {
             auto valueIndex = rand() % distinctValues[columnIndex];
             m_data[rowIndex * m_columns + columnIndex] = columnValues[valueIndex];
+            num_tuples++;
         }
 
         delete[] columnValues;

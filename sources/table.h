@@ -27,6 +27,7 @@ protected:
     int32_t * m_data;
     int32_t m_maxRows;
     int32_t m_columns;
+    int32_t num_tuples;
 private:
     static std::random_device randomDevice;
     static std::mt19937 randomGenerator;

@@ -54,6 +54,7 @@ void ColumnStoreTable::generateData(int32_t rows, uint32_t* distinctValues)
         for (auto rowIndex = 0; rowIndex < rows; rowIndex++) {
             auto valueIndex = rand() % distinctValues[columnIndex];
             m_data[columnIndex * m_maxRows + rowIndex] = columnValues[valueIndex];
+            num_tuples++;
         }
         delete[] columnValues;
     }

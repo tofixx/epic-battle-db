@@ -10,6 +10,8 @@ Table::Table(int maxRows, int columns)
   , m_columns(columns)
 {
     m_data = new int32_t[m_columns * maxRows];
+    num_tuples = 0;
+
 }
 
 Table::~Table() 
