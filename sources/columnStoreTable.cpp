@@ -1,3 +1,4 @@
+#include <iostream>
 #include "columnStoreTable.h"
 
 #include <stdlib.h>

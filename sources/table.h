@@ -14,6 +14,9 @@ public:
      */
     virtual void generateData(int32_t rows, uint32_t* distinctValues) = 0;
     void insert();
+    
+    void print_row(int32_t row);
+    void print(int32_t firstRow, int32_t lastRow);
 
 protected:
     static int* generateDistinctValues(int32_t numberOfDistinctValues);

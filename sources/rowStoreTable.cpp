@@ -1,5 +1,6 @@
-#include "rowStoreTable.h"
+#include <iostream>
 
+#include "rowStoreTable.h"
 
 RowStoreTable::RowStoreTable(int32_t maxRows, int32_t columns)
     :Table(maxRows, columns)
