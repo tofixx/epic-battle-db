@@ -105,3 +105,11 @@ void Table::print_row(int32_t row)
     std::cout << "]" << std::endl;
 }
 
+void Table::print(int32_t firstRow, int32_t lastRow)
+{
+    for(;firstRow<lastRow;++firstRow)
+    {
+        print_row(firstRow);
+    }
+}
+
