@@ -14,8 +14,8 @@ public:
     /**
      * Fills the first rows with data
      */
-    virtual void generateData(int32_t rows, uint32_t* distinctValues) = 0;
-    virtual void insert(int32_t * values) = 0;
+    virtual void generateData(int32_t rows, uint32_t* distinctValues);
+    virtual void insert(int32_t * values);
 
     virtual int32_t & getLocation(const int32_t &row, const int32_t &column) = 0;
     PositionList<int32_t> *table_eq_scan(const int32_t &column_id, const int32_t &value);

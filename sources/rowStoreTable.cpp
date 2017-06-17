@@ -1,7 +1,5 @@
 #include "rowStoreTable.h"
 
-#include <assert.h> 
-
 RowStoreTable::RowStoreTable(int32_t maxRows, int32_t columns)
     : Table(maxRows, columns)
 {
@@ -32,35 +30,4 @@ Table *RowStoreTable::position_list_materialize(PositionList<int32_t> &positions
     return &table;
 }
 
-void RowStoreTable::generateData(int32_t rows, uint32_t *distinctValues)
-{
-    // maybe fill row wise instead of column wise for optimal performance
-    for (auto columnIndex = 0; columnIndex < m_columns; columnIndex++)
-    {
 
-        auto columnValues = Table::generateDistinctValues(distinctValues[columnIndex]);
-
-        for (auto rowIndex = 0; rowIndex < rows; rowIndex++)
-        {
-            auto valueIndex = rand() % distinctValues[columnIndex];
-            m_data[rowIndex * m_columns + columnIndex] = columnValues[valueIndex];
-        }
-
-        delete[] columnValues;
-    }
-    m_numRows += rows;
-}
-
-void RowStoreTable::insert(int32_t *values)
-{
-    //check if there are enough values in input
-    assert(values[m_columns]);
-
-    if (m_numRows + 1 <= m_maxRows)
-    {
-        for (auto columnIndex = 0; columnIndex < m_columns; columnIndex++)
-        {
-            m_data[m_numRows * m_columns + columnIndex] = values[columnIndex];
-        }
-    }
-}

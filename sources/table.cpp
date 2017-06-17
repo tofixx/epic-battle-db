@@ -1,5 +1,6 @@
 #include <iostream>
 #include <limits>
+#include <assert.h> 
 
 #include "table.h"
 #include "positionList.h"
@@ -55,4 +56,35 @@ int *Table::generateDistinctValues(int32_t numberOfDistinctValues)
         distinctValues[i] = i;
     }
     return distinctValues;
+}
+
+void Table::generateData(int32_t rows, uint32_t *distinctValues)
+{
+    for (auto columnIndex = 0; columnIndex < m_columns; columnIndex++)
+    {
+
+        auto columnValues = Table::generateDistinctValues(distinctValues[columnIndex]);
+
+        for (auto rowIndex = 0; rowIndex < rows; rowIndex++)
+        {
+            auto valueIndex = rand() % distinctValues[columnIndex];
+            this->getLocation(rowIndex, columnIndex) = columnValues[valueIndex];
+        }
+        delete[] columnValues;
+    }
+    m_numRows += rows;
+}
+
+void Table::insert(int32_t *values)
+{
+    //check if there are enough values in input
+    assert(values[m_columns]);
+
+    if (m_numRows + 1 <= m_maxRows)
+    {
+        for (auto columnIndex = 0; columnIndex < m_columns; columnIndex++)
+        {
+            this->getLocation(m_numRows, columnIndex) = values[columnIndex];
+        }
+    }
 }
