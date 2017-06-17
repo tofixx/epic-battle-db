@@ -78,6 +78,9 @@ void test_scan_row_table()
 
     RowStoreTable t = RowStoreTable(1000, 20);
     t.generateData(800, distinct20);
+    t.print(0,10);
+    t.print_row(799);
+    t.print_row(800);
 
     int32_t search_key = 2;
     int32_t column = 3;
@@ -99,6 +102,9 @@ void test_scan_col_table()
 
     ColumnStoreTable t = ColumnStoreTable(1000, 20);
     t.generateData(800, distinct20);
+    t.print(0,10);
+    t.print_row(799);
+    t.print_row(800);
 
     int32_t search_key = 2;
     int32_t column = 3;

@@ -93,3 +93,22 @@ int32_t Table::insert(int32_t *values)
     }
 
 }
+
+void Table::print(int32_t firstRow, int32_t lastRow)
+{
+    for(;firstRow<lastRow;++firstRow)
+    {
+        print_row(firstRow);
+    }
+}
+
+void Table::print_row(int32_t row)
+{
+    std::cout << "col_"<< row <<"[";
+    for(auto column = 0; column < m_columns; ++column)
+    {
+        std::cout << this->getLocation(row, column);
+        if(column<(m_columns-1)) std::cout << ", ";
+    }
+    std::cout << "]" << std::endl;
+}
