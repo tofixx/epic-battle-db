@@ -10,5 +10,4 @@ public:
 
     void generateData(int32_t rows, uint32_t* distinctValues) override;
 
-    void print_row(int32_t row) override;
 };
