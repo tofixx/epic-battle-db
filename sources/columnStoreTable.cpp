@@ -20,13 +20,13 @@ Table *ColumnStoreTable::position_list_materialize(PositionList<int32_t> &positi
     // row wise
     for (auto row = positions.m_positions.begin(); row != positions.m_positions.end(); ++row)
     {
-        std::vector<int32_t> copy_row(columns);
+        int32_t* copy_row = new int32_t[columns];
         for (auto column = 0; column < columns; ++column)
         {
-            copy_row.push_back(this->getLocation(*row, column_ids[column]));
+            copy_row[column] = this->getLocation(*row, column_ids[column]);
         }
-        // TODO:
-        // table.insert(copy_row);
+        table.insert(copy_row);
+        delete[] copy_row;
     }
 
     // column wise
