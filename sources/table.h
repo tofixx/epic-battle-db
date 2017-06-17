@@ -14,8 +14,8 @@ public:
     /**
      * Fills the first rows with data
      */
-    virtual void generateData(int32_t rows, uint32_t* distinctValues) = 0;
-    void insert();
+    virtual void generateData(int32_t rows, uint32_t* distinctValues);
+    virtual int32_t insert(int32_t * values);
 
     virtual int32_t & getLocation(const int32_t &row, const int32_t &column) = 0;
     PositionList<int32_t> *table_eq_scan(const int32_t &column_id, const int32_t &value);
@@ -27,6 +27,7 @@ protected:
     int32_t * m_data;
     int32_t m_maxRows;
     int32_t m_columns;
+    int32_t m_numRows; // number of used rows
 private:
     static std::random_device randomDevice;
     static std::mt19937 randomGenerator;
