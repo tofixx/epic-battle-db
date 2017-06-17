@@ -85,11 +85,23 @@ int32_t Table::insert(int32_t *values)
         m_numRows += 1;
         for (auto columnIndex = 0; columnIndex < m_columns; columnIndex++)
         {
-            this->getLocation(m_numRows, columnIndex) = values[columnIndex];
+            this->getLocation(m_numRows, columnIndex) =  * new int32_t(values[columnIndex]);
         }
         return m_numRows;
     } else {
         return -1;
     }
-
 }
+
+void Table::print_row(int32_t row)
+{
+    std::cout << "col_" << row << "[";
+    for (auto column = 0; column < m_columns; ++column)
+    {
+        std::cout << this->getLocation(row, column);
+        if (column < (m_columns - 1))
+            std::cout << ", ";
+    }
+    std::cout << "]" << std::endl;
+}
+

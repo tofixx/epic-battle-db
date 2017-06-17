@@ -43,7 +43,7 @@ void test_create_row_table()
 }
 
 // week 2
-void test_insert_row_table(int maxRows, int columns, int insertRows)
+void test_insert_row_table(int maxRows, int columns, int insertRows, bool printRow)
 {
     assert(insertRows <= maxRows);
     std::cout << "insert " << insertRows <<  " in row table of size " << maxRows<< std::endl;
@@ -54,6 +54,9 @@ void test_insert_row_table(int maxRows, int columns, int insertRows)
         auto rowData = getRandomValuesInRange(columns, 300);
         auto result = t.insert(rowData);
         // std::cout << "inserted in line " << result << std::endl;
+        if (printRow) {
+            t.print_row(result);
+        }
         delete rowData;
     }
 }
@@ -163,8 +166,11 @@ int main(int argc, char const *argv[])
 
     /* week 2 tests */
     
+      std::cout << std::endl
+              << timer.measure(test_insert_row_table,10, 10, 10, true) << " ns average time per call" << std::endl;
+
     std::cout << std::endl
-              << timer.measure(test_insert_row_table,120000, 100, 100000) << " ns average time per call" << std::endl;
+              << timer.measure(test_insert_row_table,120000, 100, 100000, false) << " ns average time per call" << std::endl;
     std::cout << std::endl
               << timer.measure(test_insert_column_table,120000, 100, 100000) << " ns average time per call" << std::endl;
     test_scan_row_table();
