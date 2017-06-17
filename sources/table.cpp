@@ -75,16 +75,21 @@ void Table::generateData(int32_t rows, uint32_t *distinctValues)
     m_numRows += rows;
 }
 
-void Table::insert(int32_t *values)
+int32_t Table::insert(int32_t *values)
 {
     //check if there are enough values in input
-    assert(values[m_columns]);
+    assert(&values[m_columns] != nullptr);
 
     if (m_numRows + 1 <= m_maxRows)
     {
+        m_numRows += 1;
         for (auto columnIndex = 0; columnIndex < m_columns; columnIndex++)
         {
             this->getLocation(m_numRows, columnIndex) = values[columnIndex];
         }
+        return m_numRows;
+    } else {
+        return -1;
     }
+
 }
