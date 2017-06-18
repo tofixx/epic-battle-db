@@ -95,6 +95,18 @@ int32_t Table::insert(int32_t *values)
     }
 }
 
+void Table::overrideColumn(int32_t columnIndex, int32_t *values)
+{
+    assert(columnIndex < m_columns);
+
+    assert(&values[m_numRows] != nullptr);
+
+    for (auto rowIndex = 0; rowIndex < m_numRows; rowIndex++)
+    {
+        this->getLocation(rowIndex, columnIndex) = *new int32_t(values[columnIndex]);
+    }
+}
+
 void Table::print_row(int32_t row)
 {
     std::cout << "col_" << row << "[";

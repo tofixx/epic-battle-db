@@ -17,27 +17,17 @@ Table *ColumnStoreTable::position_list_materialize(PositionList<int32_t> &positi
 {
     ColumnStoreTable table = ColumnStoreTable(positions.size(), columns);
 
-    // row wise
-    for (auto row = positions.m_positions.begin(); row != positions.m_positions.end(); ++row)
-    {
-        int32_t *copy_row = new int32_t[columns];
-        for (auto column = 0; column < columns; ++column)
-        {
-            copy_row[column] = this->getLocation(*row, columnIds[column]);
-        }
-        table.insert(copy_row);
-        delete[] copy_row;
-    }
-
     // column wise
-    //    for (auto column = 0; column < columns; ++column) {
-    //        std::vector<int32_t> copy_column(positions.size());
-    //        for (auto row = positions.m_positions.begin(); row != positions.m_positions.end(); ++row) {
-    //            copy_column.push_back(this->getLocation(*row, columnIds[column]));
-    //        }
-    //        // TODO:
-    //        // table.override(column, copy_column);
-    //    }
+    for (auto column = 0; column < columns; ++column)
+    {
+        int32_t *copy_column = new int32_t[positions.size()];
+        for (auto row = positions.m_positions.begin(); row != positions.m_positions.end(); ++row)
+        {
+            copy_column[*row] = this->getLocation(*row, columnIds[column]);
+        }
+        table.overrideColumn(column, copy_column);
+        delete[] copy_column;
+    }
 
     return &table;
 }
