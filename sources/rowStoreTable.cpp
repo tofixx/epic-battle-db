@@ -13,7 +13,7 @@ int32_t &RowStoreTable::getLocation(const int32_t &row, const int32_t &column)
 /// return value on heap!
 Table *RowStoreTable::position_list_materialize(PositionList<int32_t> &positions, const int32_t columns, const int32_t *columnIds)
 {
-    RowStoreTable table = RowStoreTable(positions.size(), columns);
+    RowStoreTable *table = new RowStoreTable(positions.size(), columns);
 
     // row wise
     for (auto row = positions.m_positions.begin(); row != positions.m_positions.end(); ++row)
@@ -23,9 +23,9 @@ Table *RowStoreTable::position_list_materialize(PositionList<int32_t> &positions
         {
             copy_row[column] = this->getLocation(*row, columnIds[column]);
         }
-        table.insert(copy_row);
+        table->insert(copy_row);
         delete[] copy_row;
     }
 
-    return &table;
+    return table;
 }

@@ -15,7 +15,7 @@ int32_t &ColumnStoreTable::getLocation(const int32_t &row, const int32_t &column
 /// return value on heap!
 Table *ColumnStoreTable::position_list_materialize(PositionList<int32_t> &positions, const int32_t columns, const int32_t *columnIds)
 {
-    ColumnStoreTable table = ColumnStoreTable(positions.size(), columns);
+    ColumnStoreTable *table = new ColumnStoreTable(positions.size(), columns);
 
     // column wise
     for (auto column = 0; column < columns; ++column)
@@ -25,9 +25,9 @@ Table *ColumnStoreTable::position_list_materialize(PositionList<int32_t> &positi
         {
             copy_column[*row] = this->getLocation(*row, columnIds[column]);
         }
-        table.overrideColumn(column, copy_column);
+        table->overrideColumn(column, copy_column);
         delete[] copy_column;
     }
 
-    return &table;
+    return table;
 }

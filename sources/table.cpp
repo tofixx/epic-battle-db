@@ -107,6 +107,11 @@ void Table::overrideColumn(int32_t columnIndex, int32_t *values)
     }
 }
 
+int32_t Table::count()
+{
+    return m_numRows;
+}
+
 void Table::print_row(int32_t row)
 {
     std::cout << "col_" << row << "[";

@@ -3,9 +3,9 @@
 #include <iostream>
 #include <unordered_set>
 
-template<typename T>
+template <typename T>
 class PositionList {
-public:
+  public:
     PositionList()
             : m_positions() {
 
@@ -25,5 +25,13 @@ public:
         return m_positions.size();
     }
 
+    void print()
+    {
+        for (auto it = m_positions.begin(); it != m_positions.end(); ++it)
+        {
+            std::cout << *it << " ";
+        }
+        std::cout << std::endl;
+    }
     std::unordered_set<T> m_positions;
 };
