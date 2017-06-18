@@ -18,6 +18,7 @@ class Table
     virtual int32_t insert(int32_t *values);
     virtual void overrideColumn(int32_t columnId, int32_t *values);
     int32_t count();
+    int32_t size();
 
     virtual int32_t &getLocation(const int32_t &row, const int32_t &column) = 0;
     PositionList<int32_t> *table_eq_scan(const int32_t &columnId, const int32_t &value);

@@ -145,8 +145,8 @@ void test_materialize_row_table()
     delete list;
     delete t;
     std::cout << "result has " << result->count() << " elements..." << std::endl;
-    if(result->count()) result->print(0, result->count());
-    delete[] result;
+    if(result->count()) result->print(0, result->count());    
+    delete result;
     std::cout << "col store materialize executed" << std::endl;
 }
 

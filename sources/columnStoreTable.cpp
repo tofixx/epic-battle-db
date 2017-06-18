@@ -18,16 +18,20 @@ Table *ColumnStoreTable::position_list_materialize(PositionList<int32_t> &positi
     ColumnStoreTable *table = new ColumnStoreTable(positions.size(), columns);
 
     // column wise
+    int32_t *copy_column = new int32_t[positions.size()];
+    int32_t row_count;
+
     for (auto column = 0; column < columns; ++column)
     {
-        int32_t *copy_column = new int32_t[positions.size()];
+        row_count = 0;
         for (auto row = positions.m_positions.begin(); row != positions.m_positions.end(); ++row)
         {
-            copy_column[*row] = this->getLocation(*row, columnIds[column]);
+            copy_column[row_count++] = this->getLocation(*row, columnIds[column]);
         }
         table->overrideColumn(column, copy_column);
-        delete[] copy_column;
     }
+
+    delete[] copy_column;
 
     return table;
 }

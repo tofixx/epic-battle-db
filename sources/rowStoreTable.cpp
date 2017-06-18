@@ -16,16 +16,15 @@ Table *RowStoreTable::position_list_materialize(PositionList<int32_t> &positions
     RowStoreTable *table = new RowStoreTable(positions.size(), columns);
 
     // row wise
+    int32_t *copy_row = new int32_t[columns];
     for (auto row = positions.m_positions.begin(); row != positions.m_positions.end(); ++row)
     {
-        int32_t *copy_row = new int32_t[columns];
         for (auto column = 0; column < columns; ++column)
         {
             copy_row[column] = this->getLocation(*row, columnIds[column]);
         }
         table->insert(copy_row);
-        delete[] copy_row;
     }
-
+    delete[] copy_row;
     return table;
 }

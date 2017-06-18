@@ -97,7 +97,7 @@ int32_t Table::insert(int32_t *values)
 
 void Table::overrideColumn(int32_t columnIndex, int32_t *values)
 {
-    assert(columnIndex < m_columns);
+    assert(columnIndex >= 0 && columnIndex < m_columns);
 
     assert(&values[m_numRows] != nullptr);
 
@@ -110,6 +110,11 @@ void Table::overrideColumn(int32_t columnIndex, int32_t *values)
 int32_t Table::count()
 {
     return m_numRows;
+}
+
+int32_t Table::size()
+{
+    return m_maxRows;
 }
 
 void Table::print_row(int32_t row)
