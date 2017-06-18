@@ -13,17 +13,17 @@ int32_t &ColumnStoreTable::getLocation(const int32_t &row, const int32_t &column
 }
 
 /// return value on heap!
-Table *ColumnStoreTable::position_list_materialize(PositionList<int32_t> &positions, const int32_t columns, const int32_t *column_ids)
+Table *ColumnStoreTable::position_list_materialize(PositionList<int32_t> &positions, const int32_t columns, const int32_t *columnIds)
 {
     ColumnStoreTable table = ColumnStoreTable(positions.size(), columns);
 
     // row wise
     for (auto row = positions.m_positions.begin(); row != positions.m_positions.end(); ++row)
     {
-        int32_t* copy_row = new int32_t[columns];
+        int32_t *copy_row = new int32_t[columns];
         for (auto column = 0; column < columns; ++column)
         {
-            copy_row[column] = this->getLocation(*row, column_ids[column]);
+            copy_row[column] = this->getLocation(*row, columnIds[column]);
         }
         table.insert(copy_row);
         delete[] copy_row;
@@ -33,7 +33,7 @@ Table *ColumnStoreTable::position_list_materialize(PositionList<int32_t> &positi
     //    for (auto column = 0; column < columns; ++column) {
     //        std::vector<int32_t> copy_column(positions.size());
     //        for (auto row = positions.m_positions.begin(); row != positions.m_positions.end(); ++row) {
-    //            copy_column.push_back(this->getLocation(*row, column_ids[column]));
+    //            copy_column.push_back(this->getLocation(*row, columnIds[column]));
     //        }
     //        // TODO:
     //        // table.override(column, copy_column);
@@ -41,4 +41,3 @@ Table *ColumnStoreTable::position_list_materialize(PositionList<int32_t> &positi
 
     return &table;
 }
-

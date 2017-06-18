@@ -1,6 +1,6 @@
 #include <iostream>
 #include <limits>
-#include <assert.h> 
+#include <assert.h>
 
 #include "table.h"
 #include "positionList.h"
@@ -17,12 +17,12 @@ Table::~Table()
 };
 
 /// <returns>return value on heap!</returns>
-PositionList<int32_t> *Table::table_eq_scan(const int32_t &column_id, const int32_t &value)
+PositionList<int32_t> *Table::table_eq_scan(const int32_t &columnId, const int32_t &value)
 {
     auto *list = new PositionList<int32_t>();
     for (auto row = 0; row < m_maxRows; ++row)
     {
-        if (getLocation(row, column_id) == value)
+        if (getLocation(row, columnId) == value)
         {
             list->add(row);
         }
@@ -85,10 +85,12 @@ int32_t Table::insert(int32_t *values)
         m_numRows += 1;
         for (auto columnIndex = 0; columnIndex < m_columns; columnIndex++)
         {
-            this->getLocation(m_numRows, columnIndex) =  * new int32_t(values[columnIndex]);
+            this->getLocation(m_numRows, columnIndex) = *new int32_t(values[columnIndex]);
         }
         return m_numRows;
-    } else {
+    }
+    else
+    {
         return -1;
     }
 }
@@ -107,9 +109,8 @@ void Table::print_row(int32_t row)
 
 void Table::print(int32_t firstRow, int32_t lastRow)
 {
-    for(;firstRow<lastRow;++firstRow)
+    for (; firstRow < lastRow; ++firstRow)
     {
         print_row(firstRow);
     }
 }
-
