@@ -11,7 +11,7 @@ int32_t &RowStoreTable::getLocation(const int32_t &row, const int32_t &column)
 }
 
 /// return value on heap!
-Table &RowStoreTable::position_list_materialize(PositionList<int32_t> &positions, const int32_t columns, const int32_t *columnIds)
+Table *RowStoreTable::position_list_materialize(PositionList<int32_t> &positions, const int32_t columns, const int32_t *columnIds)
 {
     RowStoreTable *table = new RowStoreTable(positions.size(), columns);
 
@@ -27,5 +27,5 @@ Table &RowStoreTable::position_list_materialize(PositionList<int32_t> &positions
         delete[] copy_row;
     }
 
-    return &table;
+    return table;
 }

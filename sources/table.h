@@ -22,7 +22,7 @@ class Table
 
     virtual int32_t &getLocation(const int32_t &row, const int32_t &column) = 0;
     PositionList<int32_t> *table_eq_scan(const int32_t &columnId, const int32_t &value);
-    virtual Table &position_list_materialize(PositionList<int32_t> &positions, const int32_t columns, const int32_t *columnIds) = 0;
+    virtual Table *position_list_materialize(PositionList<int32_t> &positions, const int32_t columns, const int32_t *columnIds) = 0;
 
     void print_row(int32_t row);
     void print(int32_t firstRow, int32_t lastRow);
