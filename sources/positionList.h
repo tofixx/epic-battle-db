@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include <unordered_set>
+#include <vector>
 
 template <typename T>
 class PositionList {
@@ -17,7 +17,7 @@ class PositionList {
     }
 
     void add(T value) {
-        this->m_positions.insert(value);
+        this->m_positions.push_back(value);
     }
 
     int32_t size()
@@ -33,5 +33,5 @@ class PositionList {
         }
         std::cout << std::endl;
     }
-    std::unordered_set<T> m_positions;
+    std::vector<T> m_positions;
 };
