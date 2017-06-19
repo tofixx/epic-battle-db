@@ -15,7 +15,7 @@ int32_t &ColumnStoreTable::getLocation(const int32_t &row, const int32_t &column
 }
 
 /// return value on heap!
-Table *ColumnStoreTable::position_list_materialize(PositionList<int32_t> &positions, const int32_t columns, const int32_t *columnIds)
+Table *ColumnStoreTable::position_list_materialize(std::vector<int32_t> &positions, const int32_t columns, const int32_t *columnIds)
 {
     ColumnStoreTable *table = new ColumnStoreTable(positions.size(), columns);
 
@@ -26,7 +26,7 @@ Table *ColumnStoreTable::position_list_materialize(PositionList<int32_t> &positi
     for (auto column = 0; column < columns; ++column)
     {
         row_count = 0;
-        for (auto row = positions.m_positions.begin(); row != positions.m_positions.end(); ++row)
+        for (auto row = positions.begin(); row != positions.end(); ++row)
         {
             copy_column[row_count++] = this->getLocation(*row, columnIds[column]);
         }

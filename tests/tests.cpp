@@ -89,9 +89,8 @@ void test_scan_row_table()
     int32_t search_key = t.getLocation(0,3);
     int32_t column = 3;
     auto list = t.table_eq_scan(column, search_key);
-    list->print();
 
-    for (auto it = list->m_positions.begin(); it != list->m_positions.end(); ++it)
+    for (auto it = list->begin(); it != list->end(); ++it)
     {
         if (t.getLocation(*it, column) != search_key)
         {
@@ -114,9 +113,8 @@ void test_scan_col_table()
     int32_t search_key = t.getLocation(0,3);
     int32_t column = 3;
     auto list = t.table_eq_scan(column, search_key);
-    list->print();
 
-    for (auto it = list->m_positions.begin(); it != list->m_positions.end(); ++it)
+    for (auto it = list->begin(); it != list->end(); ++it)
     {
         if (t.getLocation(*it, column) != search_key)
         {
