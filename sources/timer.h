@@ -24,9 +24,10 @@ class TimeTimer
 			func(std::forward<Args>(args)...);
 		}
 
-		auto durationS = std::chrono::duration_cast<TimeS>(ClockT::now() - start).count();
-		auto durationMs = std::chrono::duration_cast<TimeMs>(ClockT::now() - start).count();
-		auto durationNs = std::chrono::duration_cast<TimeNs>(ClockT::now() - start).count();
+		auto end = ClockT::now();
+		auto durationS = std::chrono::duration_cast<TimeS>(end - start).count();
+		auto durationMs = std::chrono::duration_cast<TimeMs>(end - start).count();
+		auto durationNs = std::chrono::duration_cast<TimeNs>(end - start).count();
 
 		auto avgTimePerCall = durationNs / m_executionTimes;
 
