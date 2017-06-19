@@ -65,7 +65,7 @@ void Table::generateData(int32_t rows, uint32_t *distinctValues)
 
         auto columnValues = Table::generateDistinctValues(distinctValues[columnIndex]);
 
-        for (auto rowIndex = 0; rowIndex < rows; rowIndex++)
+        for (auto rowIndex = 0; rowIndex < rows; ++rowIndex)
         {
             auto valueIndex = rand() % distinctValues[columnIndex];
             this->getLocation(rowIndex, columnIndex) = columnValues[valueIndex];
@@ -80,14 +80,13 @@ int32_t Table::insert(int32_t *values)
     //check if there are enough values in input
     assert(&values[m_columns] != nullptr);
 
-    if (m_numRows + 1 <= m_maxRows)
+    if (m_numRows + 1 < m_maxRows)
     {
-        m_numRows += 1;
         for (auto columnIndex = 0; columnIndex < m_columns; columnIndex++)
         {
             this->getLocation(m_numRows, columnIndex) = *new int32_t(values[columnIndex]);
         }
-        return m_numRows;
+        return m_numRows++;
     }
     else
     {
@@ -123,7 +122,7 @@ void Table::print_row(int32_t row)
     for (auto column = 0; column < m_columns; ++column)
     {
         std::cout << this->getLocation(row, column);
-        if (column < (m_columns - 1))
+        if (column != (m_columns - 1))
             std::cout << ", ";
     }
     std::cout << "]" << std::endl;
