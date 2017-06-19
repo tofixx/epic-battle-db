@@ -19,8 +19,8 @@ class PositionList {
     void add(T value) {
         this->m_positions.push_back(value);
     }
-
-    int32_t size()
+    
+    int32_t count()
     {
         return m_positions.size();
     }
