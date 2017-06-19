@@ -83,11 +83,10 @@ void test_scan_row_table()
 
     RowStoreTable t = RowStoreTable(1000, 20);
     t.generateData(800, distinct20);
-    t.print(0, 10);
+    t.print(0, 9);
     t.print_row(799);
-    t.print_row(800);
 
-    int32_t search_key = 2;
+    int32_t search_key = t.getLocation(0,3);
     int32_t column = 3;
     auto list = t.table_eq_scan(column, search_key);
     list->print();
@@ -108,11 +107,10 @@ void test_scan_col_table()
 
     ColumnStoreTable t = ColumnStoreTable(1000, 20);
     t.generateData(800, distinct20);
-    t.print(0, 10);
+    t.print(0, 9);
     t.print_row(799);
-    t.print_row(800);
 
-    int32_t search_key = 2;
+    int32_t search_key = t.getLocation(0,3);
     int32_t column = 3;
     auto list = t.table_eq_scan(column, search_key);
     list->print();
@@ -136,7 +134,7 @@ void test_materialize_row_table()
     t->generateData(800, distinct20);
     std::cout << "row table has " << t->count() << " rows..." << std::endl;
 
-    int32_t search_key = 8;
+    int32_t search_key = t->getLocation(1,3);
     int32_t column = 3;
     auto list = t->table_eq_scan(column, search_key);
 
@@ -158,7 +156,7 @@ void test_materialize_col_table()
     t->generateData(800, distinct20);
     std::cout << "column table has " << t->count() << " rows..." << std::endl;
 
-    int32_t search_key = 8;
+    int32_t search_key = t->getLocation(0,3);
     int32_t column = 3;
     auto list = t->table_eq_scan(column, search_key);
     int32_t columns[3] = {0, 3, 4};
