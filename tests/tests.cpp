@@ -96,6 +96,7 @@ void test_scan_row_table()
             std::cout << "ERROR: wrong result: pos  " << *it << " value " << t.getLocation(*it, column) << " expected " << search_key << std::endl;
         }
     }
+    delete list;
     std::cout << "check row store scan DONE" << std::endl;
 }
 
@@ -120,7 +121,7 @@ void test_scan_col_table()
             std::cout << "ERROR: wrong result: " << *it << " value " << t.getLocation(*it, column) << " expected " << search_key << std::endl;
         }
     }
-
+    delete list;
     std::cout << "check col store scan DONE" << std::endl;
 }
 
