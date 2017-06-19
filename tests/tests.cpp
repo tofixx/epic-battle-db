@@ -13,12 +13,12 @@
 /**
 * Returns numValues random Values from 1 - maxValues
 */
-int32_t *getRandomValuesInRange(int32_t numValues, int32_t maxValue)
+std::vector<int32_t> getRandomValuesInRange(int32_t numValues, int32_t maxValue)
 {
-    int32_t *returnValues = new int32_t[numValues];
-    for (auto i = 0; i < numValues; i++)
+    std::vector<int32_t> returnValues;
+    for (auto i = 0; i < numValues; ++i)
     {
-        returnValues[i] = std::rand() % maxValue + 1;
+        returnValues.push_back(std::rand() % maxValue + 1);
     }
     return returnValues;
 }
@@ -46,7 +46,7 @@ void test_create_row_table()
 void test_insert_row_table(int maxRows, int columns, int insertRows, bool printRow)
 {
     assert(insertRows <= maxRows);
-    std::cout << "insert " << insertRows << " in row table of size " << maxRows << std::endl;
+    std::cout << "insert " << insertRows << " rows in row table of size " << maxRows << std::endl;
 
     RowStoreTable t = RowStoreTable(maxRows, columns);
     for (int i = 0; i < insertRows; i++)
@@ -58,14 +58,13 @@ void test_insert_row_table(int maxRows, int columns, int insertRows, bool printR
         {
             t.print_row(result);
         }
-        delete rowData;
     }
 }
 
 void test_insert_column_table(int maxRows, int columns, int insertRows)
 {
     assert(insertRows <= maxRows);
-    std::cout << "insert " << insertRows << " in column table of size " << maxRows << std::endl;
+    std::cout << "insert " << insertRows << " rows in column table of size " << maxRows << std::endl;
 
     ColumnStoreTable t = ColumnStoreTable(maxRows, columns);
     for (int i = 0; i < insertRows; i++)
@@ -73,7 +72,6 @@ void test_insert_column_table(int maxRows, int columns, int insertRows)
         auto rowData = getRandomValuesInRange(columns, 300);
         auto result = t.insert(rowData);
         // std::cout << "inserted in line " << result << std::endl;
-        delete rowData;
     }
 }
 
@@ -145,7 +143,10 @@ void test_materialize_row_table()
     delete list;
     delete t;
     std::cout << "result has " << result->count() << " rows..." << std::endl;
-    if(result->count()) result->print(0, result->count());    
+    if (result->count())
+    {
+        result->print(0, result->count());
+    }
     delete result;
     std::cout << "col store materialize executed" << std::endl;
 }
@@ -166,7 +167,10 @@ void test_materialize_col_table()
     delete list;
     delete t;
     std::cout << "result has " << result->count() << " rows..." << std::endl;
-    if(result->count()) result->print(0, result->count());
+    if (result->count())
+    {
+        result->print(0, result->count());
+    }
     delete result;
     std::cout << "row store materialize executed" << std::endl;
 }

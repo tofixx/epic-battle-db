@@ -75,19 +75,19 @@ void Table::generateData(int32_t rows, uint32_t *distinctValues)
     m_numRows += rows;
 }
 
-int32_t Table::insert(int32_t *values)
+int32_t Table::insert(const std::vector<int32_t> &row_values)
 {
     //check if there are enough values in input
-    assert(&values[m_columns] != nullptr);
-
+    assert(row_values.size() <= this->m_columns);
+    int32_t columnIndex = 0;
     if (m_numRows + 1 <= m_maxRows)
     {
-        m_numRows += 1;
-        for (auto columnIndex = 0; columnIndex < m_columns; columnIndex++)
-        {
-            this->getLocation(m_numRows, columnIndex) = *new int32_t(values[columnIndex]);
+        for (auto col = row_values.begin(); col != row_values.end(); col++)
+        {        
+            columnIndex = std::distance(row_values.begin(), col);
+            this->getLocation(m_numRows, columnIndex) = *col;
         }
-        return m_numRows;
+        return ++m_numRows;
     }
     else
     {
@@ -95,11 +95,11 @@ int32_t Table::insert(int32_t *values)
     }
 }
 
-void Table::overrideColumn(int32_t columnIndex, int32_t *values)
+void Table::overrideColumn(const int32_t columnIndex, const std::vector<int32_t> &values)
 {
     assert(columnIndex >= 0 && columnIndex < m_columns);
 
-    assert(&values[m_numRows] != nullptr);
+    assert(values.size() <= this->m_maxRows);
 
     for (auto rowIndex = 0; rowIndex < m_numRows; rowIndex++)
     {
