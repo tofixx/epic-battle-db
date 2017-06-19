@@ -1,7 +1,7 @@
 #include <iostream>
 #include <chrono>
 
-template <typename TimeT = std::chrono::nanoseconds, typename ClockT = std::chrono::high_resolution_clock>
+template <typename TimeNs = std::chrono::nanoseconds, typename TimeMs = std::chrono::milliseconds, typename TimeS = std::chrono::seconds,typename ClockT = std::chrono::high_resolution_clock>
 class TimeTimer
 {
   public:
@@ -24,11 +24,26 @@ class TimeTimer
 			func(std::forward<Args>(args)...);
 		}
 
-		auto duration = std::chrono::duration_cast<TimeT>(ClockT::now() - start).count();
+		auto durationS = std::chrono::duration_cast<TimeS>(ClockT::now() - start).count();
+		auto durationMs = std::chrono::duration_cast<TimeMs>(ClockT::now() - start).count();
+		auto durationNs = std::chrono::duration_cast<TimeNs>(ClockT::now() - start).count();
 
-		auto avgTimePerCall = duration / m_executionTimes;
+		auto avgTimePerCall = durationNs / m_executionTimes;
 
-		std::cout << std::endl << "\x1B[31m" << duration << "ns total duration; " << avgTimePerCall << "ns average time per call\x1B[0m\n" << std::endl;
+		std::cout << std::endl << "\x1B[42m";
+
+		if (durationS != 0) {
+			durationMs -= durationS * 1000;
+			durationNs -= durationS * 1e+9;
+			std::cout << durationS << "s ";
+		}
+
+		if (durationMs != 0) {
+			durationNs -= durationMs * 1e+6;
+			std::cout << durationMs << "ms ";
+		}
+
+		std::cout << durationNs << "ns total duration; " << avgTimePerCall << "ns average time per call\x1B[0m\n" << std::endl;
 	}
 
   private:
