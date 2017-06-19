@@ -1,6 +1,6 @@
-#include "columnStoreTable.h"
-
 #include <stdlib.h>
+#include <assert.h>
+#include "columnStoreTable.h"
 
 ColumnStoreTable::ColumnStoreTable(int32_t maxRows, int32_t columns)
     : Table(maxRows, columns)
@@ -9,6 +9,8 @@ ColumnStoreTable::ColumnStoreTable(int32_t maxRows, int32_t columns)
 
 int32_t &ColumnStoreTable::getLocation(const int32_t &row, const int32_t &column)
 {
+    assert (column < this->m_columns);
+    assert (row < this->m_maxRows);
     return m_data[column * m_maxRows + row];
 }
 

@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "rowStoreTable.h"
 
 RowStoreTable::RowStoreTable(int32_t maxRows, int32_t columns)
@@ -7,6 +8,8 @@ RowStoreTable::RowStoreTable(int32_t maxRows, int32_t columns)
 
 int32_t &RowStoreTable::getLocation(const int32_t &row, const int32_t &column)
 {
+    assert (column < this->m_columns);
+    assert (row < this->m_maxRows);
     return m_data[row * m_columns + column];
 }
 
