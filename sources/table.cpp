@@ -80,7 +80,7 @@ int32_t Table::insert(int32_t *values)
     //check if there are enough values in input
     assert(&values[m_columns] != nullptr);
 
-    if (m_numRows + 1 < m_maxRows)
+    if (m_numRows < m_maxRows)
     {
         for (auto columnIndex = 0; columnIndex < m_columns; columnIndex++)
         {
