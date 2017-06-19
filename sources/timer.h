@@ -15,7 +15,7 @@ class TimeTimer
 	template <typename F, typename... Args>
 	void measure(F func, Args &&... args)
 	{
-		std::cout << "\x1B[33mrun " << func << " for " << m_executionTimes << " times...\x1B[0m\n" << std::endl;
+		std::cout << "\x1B[33mrun " << typeid(func).name() << " for " << m_executionTimes << " times...\x1B[0m\n" << std::endl;
 
 		auto start = ClockT::now();
 
