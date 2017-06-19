@@ -15,7 +15,7 @@ class TimeTimer
 	template <typename F, typename... Args>
 	void measure(F func, Args &&... args)
 	{
-		std::cout << "run " << func << " for " << m_executionTimes << " times..." << std::endl;
+		std::cout << "\x1B[33mrun " << func << " for " << m_executionTimes << " times...\x1B[0m\n" << std::endl;
 
 		auto start = ClockT::now();
 
@@ -30,7 +30,7 @@ class TimeTimer
 
 		auto avgTimePerCall = durationNs / m_executionTimes;
 
-		std::cout << std::endl << "\x1B[42m";
+		std::cout << std::endl << "\x1B[32m";
 
 		if (durationS != 0) {
 			durationMs -= durationS * 1000;
