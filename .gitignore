@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# Exclude build folder
+_build
+build
+cmake-build-debug
+
+# Exclude IDE
+.vscode
+.idea
