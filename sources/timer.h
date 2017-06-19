@@ -1,5 +1,6 @@
 #include <iostream>
 #include <chrono>
+#include <typeinfo>
 
 template <typename TimeNs = std::chrono::nanoseconds, typename TimeMs = std::chrono::milliseconds, typename TimeS = std::chrono::seconds,typename ClockT = std::chrono::high_resolution_clock>
 class TimeTimer
