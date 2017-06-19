@@ -16,7 +16,7 @@
 int32_t *getRandomValuesInRange(int32_t numValues, int32_t maxValue)
 {
     int32_t *returnValues = new int32_t[numValues];
-    for (auto i = 0; i < numValues; i++)
+    for (auto i = 0; i < numValues; ++i)
     {
         returnValues[i] = std::rand() % maxValue + 1;
     }
@@ -46,10 +46,10 @@ void test_create_row_table()
 void test_insert_row_table(int maxRows, int columns, int insertRows, bool printRow)
 {
     assert(insertRows <= maxRows);
-    std::cout << "insert " << insertRows << " in row table of size " << maxRows << std::endl;
+    std::cout << "insert " << insertRows << " rows in row table of size " << maxRows << std::endl;
 
     RowStoreTable t = RowStoreTable(maxRows, columns);
-    for (int i = 0; i < insertRows; i++)
+    for (int32_t i = 0; i < insertRows; ++i)
     {
         auto rowData = getRandomValuesInRange(columns, 300);
         auto result = t.insert(rowData);
@@ -65,10 +65,10 @@ void test_insert_row_table(int maxRows, int columns, int insertRows, bool printR
 void test_insert_column_table(int maxRows, int columns, int insertRows)
 {
     assert(insertRows <= maxRows);
-    std::cout << "insert " << insertRows << " in column table of size " << maxRows << std::endl;
+    std::cout << "insert " << insertRows << " rows in column table of size " << maxRows << std::endl;
 
     ColumnStoreTable t = ColumnStoreTable(maxRows, columns);
-    for (int i = 0; i < insertRows; i++)
+    for (int32_t i = 0; i < insertRows; ++i)
     {
         auto rowData = getRandomValuesInRange(columns, 300);
         auto result = t.insert(rowData);
