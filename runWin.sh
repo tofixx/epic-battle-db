@@ -5,4 +5,4 @@ mkdir _build
 cd _build
 cmake ..
 cmake --build . 
-ctest
+ctest -V #-V enables verbose output alternative: --output-on-failure only shows output when task fails

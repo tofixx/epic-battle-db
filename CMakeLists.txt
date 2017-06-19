@@ -7,9 +7,19 @@ enable_testing()
 
 # compile & link
 add_library (table sources/table.cpp sources/rowStoreTable.cpp sources/columnStoreTable.cpp)
-add_executable (runTest tests/tests.cpp)
-target_link_libraries (runTest table)
+add_executable (create tests/create.cpp)
+add_executable (scan tests/scan.cpp)
+add_executable (materialize tests/materialize.cpp)
+add_executable (insert tests/insert.cpp)
+
+target_link_libraries (create table)
+target_link_libraries (scan table)
+target_link_libraries (materialize table)
+target_link_libraries (insert table)
 
 # test
 #include(CTest)
-add_test (test runTest)
+add_test (createTest create)
+add_test (scanTest scan)
+add_test (materializeTest materialize)
+add_test (insertTest insert)
