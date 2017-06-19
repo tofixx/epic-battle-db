@@ -180,20 +180,15 @@ int main(int argc, char const *argv[])
 
     // time measuring sample
     TimeTimer<> timer = TimeTimer<>(10);
-    std::cout << std::endl
-              << timer.measure(test_create_column_table) << " ns average time per call" << std::endl;
-    std::cout << std::endl
-              << timer.measure(test_create_row_table) << " ns average time per call" << std::endl;
+    
+    timer.measure(test_create_column_table);
+    timer.measure(test_create_row_table);
 
-    /* week 2 tests */
+    /* week 2 tests */    
+    timer.measure(test_insert_row_table, 10, 10, 10, true);
+    timer.measure(test_insert_row_table, 120000, 100, 100000, false);
+    timer.measure(test_insert_column_table, 120000, 100, 100000);
 
-    std::cout << std::endl
-              << timer.measure(test_insert_row_table, 10, 10, 10, true) << " ns average time per call" << std::endl;
-
-    std::cout << std::endl
-              << timer.measure(test_insert_row_table, 120000, 100, 100000, false) << " ns average time per call" << std::endl;
-    std::cout << std::endl
-              << timer.measure(test_insert_column_table, 120000, 100, 100000) << " ns average time per call" << std::endl;
     test_scan_row_table();
     test_scan_col_table();
     test_materialize_col_table();

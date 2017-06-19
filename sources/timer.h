@@ -13,7 +13,7 @@ class TimeTimer
 	virtual ~TimeTimer() = default;
 
 	template <typename F, typename... Args>
-	typename TimeT::rep measure(F func, Args &&... args)
+	void measure(F func, Args &&... args)
 	{
 		std::cout << "run " << func << " for " << m_executionTimes << " times..." << std::endl;
 
@@ -26,7 +26,9 @@ class TimeTimer
 
 		auto duration = std::chrono::duration_cast<TimeT>(ClockT::now() - start).count();
 
-		return duration / m_executionTimes;
+		auto avgTimePerCall = duration / m_executionTimes;
+
+		std::cout << std::endl << duration << " ns average time per call" << std::endl;
 	}
 
   private:
