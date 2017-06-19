@@ -3,7 +3,6 @@
 #include <assert.h>
 
 #include "table.h"
-#include "positionList.h"
 
 Table::Table(int maxRows, int columns)
     : m_maxRows(maxRows), m_columns(columns), m_numRows(0)
@@ -17,17 +16,17 @@ Table::~Table()
 };
 
 /// <returns>return value on heap!</returns>
-PositionList<int32_t> *Table::table_eq_scan(const int32_t &columnId, const int32_t &value)
+std::vector<int32_t> *Table::table_eq_scan(const int32_t &columnId, const int32_t &value)
 {
-    auto *list = new PositionList<int32_t>();
+    auto *result = new std::vector<int32_t>();
     for (auto row = 0; row < m_maxRows; ++row)
     {
         if (getLocation(row, columnId) == value)
         {
-            list->add(row);
+            result->push_back(row);
         }
     }
-    return list;
+    return result;
 }
 
 std::random_device Table::randomDevice;
