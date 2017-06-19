@@ -84,7 +84,7 @@ int32_t Table::insert(int32_t *values)
     {
         for (auto columnIndex = 0; columnIndex < m_columns; columnIndex++)
         {
-            this->getLocation(m_numRows, columnIndex) = *new int32_t(values[columnIndex]);
+            this->getLocation(m_numRows, columnIndex) = int32_t(values[columnIndex]);
         }
         return m_numRows++;
     }
@@ -100,9 +100,10 @@ void Table::overrideColumn(int32_t columnIndex, int32_t *values)
 
     assert(&values[m_numRows] != nullptr);
 
+    this->m_numRows = this->size();
     for (auto rowIndex = 0; rowIndex < m_numRows; rowIndex++)
     {
-        this->getLocation(rowIndex, columnIndex) = *new int32_t(values[columnIndex]);
+        this->getLocation(rowIndex, columnIndex) = int32_t(values[columnIndex]);
     }
 }
 
