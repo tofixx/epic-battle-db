@@ -1,7 +1,8 @@
 #include <iostream>
 #include <chrono>
+#include <typeinfo>
 
-template <typename TimeT = std::chrono::nanoseconds, typename ClockT = std::chrono::high_resolution_clock>
+template <typename TimeNs = std::chrono::nanoseconds, typename TimeMs = std::chrono::milliseconds, typename TimeS = std::chrono::seconds,typename ClockT = std::chrono::high_resolution_clock>
 class TimeTimer
 {
   public:
@@ -13,9 +14,9 @@ class TimeTimer
 	virtual ~TimeTimer() = default;
 
 	template <typename F, typename... Args>
-	typename TimeT::rep measure(F func, Args &&... args)
+	void measure(F func, Args &&... args)
 	{
-		std::cout << "run " << func << " for " << m_executionTimes << " times..." << std::endl;
+		std::cout << "\x1B[33mrun " << typeid(func).name() << " for " << m_executionTimes << " times...\x1B[0m\n" << std::endl;
 
 		auto start = ClockT::now();
 
@@ -24,9 +25,27 @@ class TimeTimer
 			func(std::forward<Args>(args)...);
 		}
 
-		auto duration = std::chrono::duration_cast<TimeT>(ClockT::now() - start).count();
+		auto end = ClockT::now();
+		auto durationS = std::chrono::duration_cast<TimeS>(end - start).count();
+		auto durationMs = std::chrono::duration_cast<TimeMs>(end - start).count();
+		auto durationNs = std::chrono::duration_cast<TimeNs>(end - start).count();
 
-		return duration / m_executionTimes;
+		auto avgTimePerCall = durationNs / m_executionTimes;
+
+		std::cout << std::endl << "\x1B[32m";
+
+		if (durationS != 0) {
+			durationMs -= durationS * 1000;
+			durationNs -= durationS * 1e+9;
+			std::cout << durationS << "s ";
+		}
+
+		if (durationMs != 0) {
+			durationNs -= durationMs * 1e+6;
+			std::cout << durationMs << "ms ";
+		}
+
+		std::cout << durationNs << "ns total duration; " << avgTimePerCall << "ns average time per call\x1B[0m\n" << std::endl;
 	}
 
   private:

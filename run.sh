@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 
-mkdir _build
-cd _build
+rm -rf build
+mkdir build
+cd build
 cmake ..
-cmake --build . && ./run
+cmake --build . 
+ctest -V #-V enables verbose output alternative: --output-on-failure only shows output when task fails
