@@ -68,7 +68,7 @@ int main(int argc, char const *argv[])
     timer.measure(test_insert_row_table, 120000, 100, 100000, false);
     timer.measure(test_insert_column_table, 120000, 100, 100000);
 
-    std::ofstream out("insert.csv");
+    std::ofstream out("times_insert.csv");
     out << "style,rows,columns,time ns" << std::endl;
     for (int32_t rows = 10000; rows <= 1000000; rows *= 10)
     {
