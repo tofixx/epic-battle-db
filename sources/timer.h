@@ -28,7 +28,7 @@ class TimeTimer
 
 		auto avgTimePerCall = duration / m_executionTimes;
 
-		std::cout << std::endl << duration << " ns average time per call" << std::endl;
+		std::cout << std::endl << "\x1B[31m" << duration << "ns total duration; " << avgTimePerCall << "ns average time per call\x1B[0m\n" << std::endl;
 	}
 
   private:
