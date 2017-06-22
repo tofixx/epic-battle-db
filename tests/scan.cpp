@@ -73,10 +73,15 @@ void test_scan_col_table()
     std::cout << "check col store scan DONE" << std::endl;
 }
 
+void execute_scan(Table *table, const int32_t &column_id, const int32_t &comparison_value)
+{
+    table->table_eq_scan(column_id, comparison_value);
+}
+
 int main(int argc, char const *argv[])
 {
-    test_scan_row_table();
-    test_scan_col_table();
+    //test_scan_row_table();
+    //test_scan_col_table();
     TimeTimer<> timer(3);
     std::ofstream out("times_scan.csv");
     out << "style,rows,columns,time ns" << std::endl;
@@ -94,7 +99,7 @@ int main(int argc, char const *argv[])
             {
                 table->generateData(rows, randomValues);
                 auto comparison_value = table->getLocation(0, 3);
-                auto scanTime = timer.measure(table->table_eq_scan, 3, comparison_value);
+                auto scanTime = timer.measure(execute_scan, *table, 3, comparison_value);
                 if (table == tables.begin())
                 {
                     out << "row-style," << rows << "," << columns << "," << scanTime << std::endl;
