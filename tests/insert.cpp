@@ -72,7 +72,7 @@ int main(int argc, char const *argv[])
     out << "rows,columns,time ns row store, time ns col store" << std::endl;
     for (int32_t rows = 1; rows <= 10000000; rows *= 2)
     {
-        for (int columns = 1; columns <= 10000000; columns *= 2)
+        for (int columns = 1; columns <= 128; columns *= 2)
         {
             auto time_insert_row_style = timer.measure(test_insert_row_table, rows, columns, rows, false);
             auto time_insert_col_style = timer.measure(test_insert_column_table, rows, columns, rows);
