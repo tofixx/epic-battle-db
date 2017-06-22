@@ -37,3 +37,8 @@ _build
 # Exclude IDE
 .vscode
 .idea
+
+
+# Python
+/SAP-Hana-Scripts/__pycache__
+/SAP-Hana-Scripts/config.py
