@@ -64,21 +64,20 @@ int main(int argc, char const *argv[])
 {
     TimeTimer<> timer = TimeTimer<>(3);
 
-    timer.measure(test_insert_row_table, 10, 10, 10, true);
-    timer.measure(test_insert_row_table, 120000, 100, 100000, false);
-    timer.measure(test_insert_column_table, 120000, 100, 100000);
+    //timer.measure(test_insert_row_table, 10, 10, 10, true);
+    //timer.measure(test_insert_row_table, 120000, 100, 100000, false);
+    //timer.measure(test_insert_column_table, 120000, 100, 100000);
 
     std::ofstream out("times_insert.csv");
-    out << "style,rows,columns,time ns" << std::endl;
-    for (int32_t rows = 10000; rows <= 1000000; rows *= 10)
+    out << "rows,columns,time ns row store, time ns col store" << std::endl;
+    for (int32_t rows = 1; rows <= 10000000; rows *= 2)
     {
-        for (int columns = 1; columns <= 128; columns *= 2)
+        for (int columns = 1; columns <= 10000000; columns *= 2)
         {
             auto time_insert_row_style = timer.measure(test_insert_row_table, rows, columns, rows, false);
             auto time_insert_col_style = timer.measure(test_insert_column_table, rows, columns, rows);
 
-            out << "row-style," << rows << "," << columns << "," << time_insert_row_style << std::endl;
-            out << "col-style," << rows << "," << columns << "," << time_insert_col_style << std::endl;
+            out << rows << "," << columns << "," << time_insert_row_style << "," << time_insert_col_style << std::endl;
         }
     }
 }
