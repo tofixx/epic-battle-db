@@ -33,6 +33,7 @@
 
 # Exclude build folder
 _build
+cmake-build-debug
 
 # Exclude IDE
 .vscode
