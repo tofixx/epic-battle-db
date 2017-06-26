@@ -18,12 +18,13 @@ Table::~Table()
 /// <returns>return value on heap!</returns>
 std::vector<int32_t> *Table::table_eq_scan(const int32_t &columnId, const int32_t &value)
 {
-    auto *result = new std::vector<int32_t>();
+    auto *result = new std::vector<int32_t>(); // todo m_maxRows Länge verwenden
     for (auto row = 0; row < m_maxRows; ++row)
     {
         if (getLocation(row, columnId) == value)
         {
             result->push_back(row);
+            // todo immer überschreiben, zähler aber nicht immer hochzählen
         }
     }
     return result;
@@ -83,7 +84,7 @@ int32_t Table::insert(int32_t *values)
     {
         for (auto columnIndex = 0; columnIndex < m_columns; columnIndex++)
         {
-            this->getLocation(m_numRows, columnIndex) = int32_t(values[columnIndex]);
+            this->getLocation(m_numRows, columnIndex) = values[columnIndex];
         }
         return m_numRows++;
     }
