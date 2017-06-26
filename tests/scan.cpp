@@ -86,42 +86,51 @@ int main(int argc, char const *argv[])
     //test_scan_row_table();
     //test_scan_col_table();
     std::ofstream out("times_scan.csv");
-    out << "rows,columns,ms rowstore, ms columnstore" << std::endl;
-    for (int32_t rows = 10000; rows <= 10000000; rows *= 10)
+    out << "rows,columns,ns rowstore, ns columnstore" << std::endl;
+    int32_t rows = 10000000;
+    int32_t rounds = 20;
+
+    for (int columns = 1; columns <= 128; columns *= 2)
     {
-        for (int columns = 1; columns <= 128; columns *= 2)
-        {
+        // create tables
+        auto row_table = RowStoreTable(rows, columns);
+        auto column_table = ColumnStoreTable(rows, columns);
 
-            auto row_table = new RowStoreTable(rows, columns);
-            auto column_table = new ColumnStoreTable(rows, columns);
 
-            auto randomValues = getRandomValuesInRange(columns, (rows / 500));
+        // fill tables with same data
+        // TODO: replace with data with known selectivity
+        auto randomValues = getRandomValuesInRange(columns, (rows / 500));
+        row_table.generateData(rows, randomValues);
+        column_table.generateData(rows, randomValues);
+        delete[] randomValues;
+        auto column = columns/2;
 
-            row_table->generateData(rows, randomValues);
-            column_table->generateData(rows, randomValues);
-            auto column = columns/2;
 
-            auto comparison_value = row_table->getLocation(0, column);
-            auto start = std::chrono::high_resolution_clock::now();
-            row_table->table_eq_scan(column, comparison_value);
-            auto end = std::chrono::high_resolution_clock::now();
-
-            auto scanTime_row = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-
-            comparison_value = column_table->getLocation(0, column);
-            auto start_col = std::chrono::high_resolution_clock::now();
-            column_table->table_eq_scan(column, comparison_value);
-            auto end_col = std::chrono::high_resolution_clock::now();
-
-            auto scanTime_column = std::chrono::duration_cast<std::chrono::nanoseconds>(end_col - start_col).count();
-
-            out << rows << "," << columns << "," << scanTime_row << "," << scanTime_column << std::endl;
-
-            delete[] randomValues;
-            delete row_table;
-            delete column_table;
-
-            std::cout << "completed " << columns << " columns, and " << rows << " rows" << std::endl;
+        // scan tables
+        // -> row
+        auto comparison_value = row_table.getLocation(0, column); // TODO: replace with know value
+        auto start = std::chrono::high_resolution_clock::now();
+        for (int32_t round = 0; round != rounds; ++round) {
+            row_table.table_eq_scan(column, comparison_value);
+            // (optional) clear caches
         }
+        auto end = std::chrono::high_resolution_clock::now();
+        auto scanTime_row = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / rounds;
+
+        // -> col
+        comparison_value = column_table.getLocation(0, column); // TODO: replace with know value
+        start = std::chrono::high_resolution_clock::now();
+        for (int32_t round = 0; round != rounds; ++round) {
+            column_table.table_eq_scan(column, comparison_value);
+            // (optional) clear caches
+        }
+        end = std::chrono::high_resolution_clock::now();
+        auto scanTime_col = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / rounds;
+
+
+        // output results
+        out << rows << "," << columns << "," << scanTime_row << "," << scanTime_col << std::endl;
+        std::cout << rows << "," << columns << "," << scanTime_row << "," << scanTime_col << std::endl;
     }
+
 }
