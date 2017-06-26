@@ -17,6 +17,7 @@ class Table
     virtual void overrideColumn(int32_t columnId, int32_t *values);
     int32_t count();
     int32_t size();
+    void reset();
 
     virtual int32_t &getLocation(const int32_t &row, const int32_t &column) = 0;
     std::vector<int32_t> *table_eq_scan(const int32_t &columnId, const int32_t &value);
@@ -25,13 +26,14 @@ class Table
     void print_row(int32_t row);
     void print(int32_t firstRow, int32_t lastRow);
 
-  protected:
-    static int *generateRandomDistinctValues(int32_t numberOfDistinctValues);
-    static int *generateDistinctValues(int32_t numberOfDistinctValues);
     int32_t *m_data;
     int32_t m_maxRows;
     int32_t m_columns;
     int32_t m_numRows; // number of used rows
+  protected:
+    static int *generateRandomDistinctValues(int32_t numberOfDistinctValues);
+    static int *generateDistinctValues(int32_t numberOfDistinctValues);
+    
   private:
     static std::random_device randomDevice;
     static std::mt19937 randomGenerator;

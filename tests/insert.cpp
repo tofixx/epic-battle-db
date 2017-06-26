@@ -63,40 +63,110 @@ void test_insert_column_table(int maxRows, int columns, int insertRows)
 int main(int argc, char const *argv[])
 {
     std::ofstream out("times_insert.csv");
-    out << "rows,columns,time ns row store, time ns col store" << std::endl;
-    for (int32_t rows = 10000; rows <= 10000000; rows *= 10)
+    out << "rows,columns,time ns row store (row insert), time ns row store (by field), time ns row store (inlined insert), time ns row store (inlined row insert), time ns col store (by field), time ns col store (inlined insert)" << std::endl;
+    int32_t rows = 100000;
+    int32_t rounds = 10;
+
+    for (int columns = 1; columns <= 128; columns *= 2)
     {
-        for (int columns = 1; columns <= 128; columns *= 2)
+        auto rowData = getRandomValuesInRange(columns, 300);
+
+        RowStoreTable *tr = new RowStoreTable(rows, columns);
+        ColumnStoreTable *tc = new ColumnStoreTable(rows, columns);
+
+        // RowStoreTable optimized row insert
+        auto start = std::chrono::high_resolution_clock::now();
+        for (int32_t round = 0; round != rounds; ++round)
         {
-            RowStoreTable *t = new RowStoreTable(rows, columns);
-            ColumnStoreTable *tc = new ColumnStoreTable(rows, columns);
-            
-            auto rowData = getRandomValuesInRange(columns, 300);
-
-            auto start = std::chrono::high_resolution_clock::now();
-            for (int32_t i = 0; i < rows; ++i)
+            for (int32_t i = 0; i != rows; ++i)
             {
-                auto result = t->insert_row(rowData);
+                auto result = tr->insert_row(rowData);
             }
-            auto end = std::chrono::high_resolution_clock::now();
-            auto row_time = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+            tr->reset();
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+        auto row_time = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / rounds;
 
-            auto startc = std::chrono::high_resolution_clock::now();
+        // RowStoreTable normal insert
+        auto start_r = std::chrono::high_resolution_clock::now();
+        for (int32_t round = 0; round != rounds; ++round)
+        {
+            for (int32_t i = 0; i != rows; ++i)
+            {
+                auto result = tr->insert(rowData);
+            }
+            tr->reset();
+        }
+        auto end_r = std::chrono::high_resolution_clock::now();
+        auto row_r_time = std::chrono::duration_cast<std::chrono::nanoseconds>(end_r - start_r).count() / rounds;
+
+        // RowStoreTable inlined insert
+        auto start_i = std::chrono::high_resolution_clock::now();
+        for (int32_t round = 0; round != rounds; ++round)
+        {
+            for (int32_t i = 0; i != rows; ++i)
+            {
+                /*for (auto columnIndex = 0; columnIndex != tr->m_columns; ++columnIndex)
+                {
+                    tr->m_data[tr->m_numRows * tr->m_columns + columnIndex] = rowData[columnIndex];
+                    tr->m_numRows++;
+                }*/
+            }
+            tr->reset();
+        }
+        auto end_i = std::chrono::high_resolution_clock::now();
+        auto row_i_time = std::chrono::duration_cast<std::chrono::nanoseconds>(end_i - start_i).count() / rounds;
+
+        // RowStoreTable inlined row insert
+        auto start_ir = std::chrono::high_resolution_clock::now();
+        for (int32_t round = 0; round != rounds; ++round)
+        {
+            for (int32_t i = 0; i != rows; ++i)
+            {
+                memcpy(&tr->getLocation(tr->m_numRows, 0), rowData, sizeof(int32_t) * tr->m_columns);
+                tr->m_numRows++;
+            }
+            tr->reset();
+        }
+        auto end_ir = std::chrono::high_resolution_clock::now();
+        auto row_ir_time = std::chrono::duration_cast<std::chrono::nanoseconds>(end_ir - start_ir).count() / rounds;
+
+        // ColumnStoreTable normal insert
+        auto startc = std::chrono::high_resolution_clock::now();
+        for (int32_t round = 0; round != rounds; ++round)
+        {
             for (int32_t i = 0; i < rows; ++i)
             {
                 auto result = tc->insert(rowData);
             }
-            auto endc = std::chrono::high_resolution_clock::now();
-            auto col_time = std::chrono::duration_cast<std::chrono::nanoseconds>(endc - startc).count();
-
-            out << rows << "," << columns << "," << row_time << "," << col_time << std::endl;
-            std::cout << rows << "," << columns << "," << row_time << "," << col_time << std::endl;
-
-            delete rowData;
-
-            delete t;
-            delete tc;
-
+            tc->reset();
         }
+        auto endc = std::chrono::high_resolution_clock::now();
+        auto col_time = std::chrono::duration_cast<std::chrono::nanoseconds>(endc - startc).count() / rounds;
+
+        // ColumnStoreTable inlined insert
+        auto startc_i = std::chrono::high_resolution_clock::now();
+        for (int32_t round = 0; round != rounds; ++round)
+        {
+            for (int32_t i = 0; i < rows; ++i)
+            {
+                /*for (auto columnIndex = 0; columnIndex != tc->m_columns; ++columnIndex)
+                {
+                    tc->m_data[columnIndex * tc->m_maxRows + tc->m_numRows] = rowData[columnIndex];
+                    tc->m_numRows++;
+                }*/
+            }
+            tc->reset();
+        }
+        auto endc_i = std::chrono::high_resolution_clock::now();
+        auto col_i_time = std::chrono::duration_cast<std::chrono::nanoseconds>(endc_i - startc_i).count() / rounds;
+
+        out << rows << "," << columns << "," << row_time << "," << row_r_time << "," << row_i_time << "," << row_ir_time << "," << col_time << "," << col_i_time << std::endl;
+        std::cout << rows << "," << columns << "," << row_time << "," << row_r_time << "," << row_i_time << "," << row_ir_time << ","  << col_time << "," << col_i_time << std::endl;
+ 
+        delete rowData;
+
+        delete tr;
+        delete tc;
     }
 }

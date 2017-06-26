@@ -37,15 +37,15 @@ Table *RowStoreTable::position_list_materialize(std::vector<int32_t> &positions,
 
 int32_t RowStoreTable::insert_row(int32_t *values)
 {
-    assert(&values[m_columns] != nullptr);
+    //assert(&values[m_columns] != nullptr);
 
-    if (m_numRows < m_maxRows)
-    {
-        memcpy(&this->getLocation(m_numRows, 0), values, sizeof(int32_t) * m_columns);
-        return m_numRows++;
-    }
-    else
-    {
-        return -1;
-    }
+    //if (m_numRows < m_maxRows)
+    //{
+    memcpy(&this->getLocation(m_numRows, 0), values, sizeof(int32_t) * m_columns);
+    return m_numRows++;
+    //}
+    //else
+    //{
+    //    return -1;
+    //}
 }
