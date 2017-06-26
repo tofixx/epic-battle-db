@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import connector
+import time
 from random import randint, seed
 
 seed(0)
@@ -17,7 +18,15 @@ def dummy_insert(table_name, columns):
     values = ",".join([ str(randint(0, 100)) for i in range(len(columns))])
     query = "INSERT INTO %s VALUES(%s)" % (table_name, values)
     connector.execute(query)
-    
+
+def benchmark(iterations, fun, *args):
+    start = time.time()
+    for x in range(0, iterations):
+        fun( *args )
+    end = time.time()
+    total_time = end - start
+    iteration_time= total_time / iterations
+    print "Total time %.2fs, %.2fs average per iteration" % (total_time, iteration_time)
 
 bkpf_columns = [ "MANDT","BUKRS","BELNR","GJAHR","BLART","BLDAT","BUDAT","MONAT","CPUDT","CPUTM","AEDAT","UPDDT","WWERT","USNAM","TCODE","BVORG","XBLNR","DBBLG","STBLG","STJAH","BKTXT","WAERS","KURSF","KZWRS","KZKRS","BSTAT","XNETB","FRATH","XRUEB","GLVOR","GRPID","DOKID","ARCID","IBLAR","AWTYP","AWKEY","FIKRS","HWAER","HWAE2","HWAE3","KURS2","KURS3","BASW2","BASW3","UMRD2","UMRD3","XSTOV","STODT","XMWST","CURT2","CURT3","KUTY2","KUTY3","XSNET","AUSBK","XUSVR","DUEFL","AWSYS","TXKRS","LOTKZ","XWVOF","STGRD","PPNAM","BRNCH","NUMPG","ADISC","XREF1_HD","XREF2_HD","XREVERSAL","REINDAT","RLDNR","LDGRP","PROPMANO","XBLNR_ALT","VATDATE","PSOTY","PSOAK","PSOKS","PSOSG","PSOFN","INTFORM","INTDATE","PSOBT","PSOZL","PSODT","PSOTM","FM_UMART","CCINS","CCNUM","SSBLK","BATCH","SNAME","SAMPLED","EXCLUDE_FLAG","BLIND","OFFSET_STATUS","OFFSET_REFER_DAT","PENRC","KNUMV"]
 bkpf_primary_keys = ["MANDT","BUKRS","BELNR","GJAHR"]
@@ -40,10 +49,18 @@ create_table(schema_old + ".BSEG", "ROW", bseg_columns, bseg_primary_keys)
 create_table(schema_new + ".BKPF", "COLUMN", bkpf_columns, bkpf_primary_keys)
 create_table(schema_new + ".BSEG", "COLUMN", bseg_columns, bseg_primary_keys)
 
-dummy_insert(schema_old + ".BKPF", bkpf_columns)
-dummy_insert(schema_old + ".BSEG", bseg_columns)
-dummy_insert(schema_new + ".BKPF", bkpf_columns)
-dummy_insert(schema_new + ".BSEG", bseg_columns)
+
+print "Insert OLD BKPF"
+benchmark(20, dummy_insert, schema_old + ".BKPF", bkpf_columns)
+
+print "Insert NEW BKPF"
+benchmark(20, dummy_insert, schema_new + ".BKPF", bkpf_columns)
+
+print "Insert OLD BSEG"
+benchmark(20, dummy_insert, schema_old + ".BSEG", bseg_columns)
+
+print "Insert NEW BSEG"
+benchmark(20, dummy_insert, schema_new + ".BSEG", bseg_columns)
 
 connector.dropTable('TEAM1_OLD.', 'BKPF')
 connector.dropTable('TEAM1_OLD.', 'BSEG')
