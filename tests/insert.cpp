@@ -65,7 +65,7 @@ int main(int argc, char const *argv[])
     std::ofstream out("times_insert.csv");
     out << "rows,columns,time ns row store (row insert), time ns row store (by field), time ns row store (inlined insert), time ns row store (inlined row insert), time ns col store (by field), time ns col store (inlined insert)" << std::endl;
     int32_t rows = 100000;
-    int32_t rounds = 10;
+    int32_t rounds = 100;
 
     for (int columns = 1; columns <= 128; columns *= 2)
     {
@@ -106,11 +106,11 @@ int main(int argc, char const *argv[])
         {
             for (int32_t i = 0; i != rows; ++i)
             {
-                /*for (auto columnIndex = 0; columnIndex != tr->m_columns; ++columnIndex)
+                for (auto columnIndex = 0; columnIndex != tr.m_columns; ++columnIndex)
                 {
-                    tr->m_data[tr->m_numRows * tr->m_columns + columnIndex] = rowData[columnIndex];
-                    tr->m_numRows++;
-                }*/
+                    tr.m_data[tr.m_numRows * tr.m_columns + columnIndex] = rowData[columnIndex];
+                }
+                tr.m_numRows++;
             }
             tr.reset();
         }
@@ -150,11 +150,12 @@ int main(int argc, char const *argv[])
         {
             for (int32_t i = 0; i < rows; ++i)
             {
-                /*for (auto columnIndex = 0; columnIndex != tc->m_columns; ++columnIndex)
+                for (auto columnIndex = 0; columnIndex != tc.m_columns; ++columnIndex)
                 {
-                    tc->m_data[columnIndex * tc->m_maxRows + tc->m_numRows] = rowData[columnIndex];
-                    tc->m_numRows++;
-                }*/
+                    //tc.getLocation(tc.m_numRows, columnIndex) = rowData[columnIndex];
+                    tc.m_data[columnIndex * tc.m_maxRows + tc.m_numRows] = rowData[columnIndex];
+                }
+                tc.m_numRows++;
             }
             tc.reset();
         }
