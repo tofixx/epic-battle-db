@@ -71,8 +71,8 @@ int main(int argc, char const *argv[])
     {
         auto rowData = getRandomValuesInRange(columns, 300);
 
-        RowStoreTable *tr = new RowStoreTable(rows, columns);
-        ColumnStoreTable *tc = new ColumnStoreTable(rows, columns);
+        RowStoreTable tr = RowStoreTable(rows, columns);
+        ColumnStoreTable tc = ColumnStoreTable(rows, columns);
 
         // RowStoreTable optimized row insert
         auto start = std::chrono::high_resolution_clock::now();
@@ -80,9 +80,9 @@ int main(int argc, char const *argv[])
         {
             for (int32_t i = 0; i != rows; ++i)
             {
-                auto result = tr->insert_row(rowData);
+                auto result = tr.insert_row(rowData);
             }
-            tr->reset();
+            tr.reset();
         }
         auto end = std::chrono::high_resolution_clock::now();
         auto row_time = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / rounds;
@@ -93,9 +93,9 @@ int main(int argc, char const *argv[])
         {
             for (int32_t i = 0; i != rows; ++i)
             {
-                auto result = tr->insert(rowData);
+                auto result = tr.insert(rowData);
             }
-            tr->reset();
+            tr.reset();
         }
         auto end_r = std::chrono::high_resolution_clock::now();
         auto row_r_time = std::chrono::duration_cast<std::chrono::nanoseconds>(end_r - start_r).count() / rounds;
@@ -112,7 +112,7 @@ int main(int argc, char const *argv[])
                     tr->m_numRows++;
                 }*/
             }
-            tr->reset();
+            tr.reset();
         }
         auto end_i = std::chrono::high_resolution_clock::now();
         auto row_i_time = std::chrono::duration_cast<std::chrono::nanoseconds>(end_i - start_i).count() / rounds;
@@ -123,10 +123,10 @@ int main(int argc, char const *argv[])
         {
             for (int32_t i = 0; i != rows; ++i)
             {
-                memcpy(&tr->getLocation(tr->m_numRows, 0), rowData, sizeof(int32_t) * tr->m_columns);
-                tr->m_numRows++;
+                memcpy(&tr.getLocation(tr.m_numRows, 0), rowData, sizeof(int32_t) * tr.m_columns);
+                tr.m_numRows++;
             }
-            tr->reset();
+            tr.reset();
         }
         auto end_ir = std::chrono::high_resolution_clock::now();
         auto row_ir_time = std::chrono::duration_cast<std::chrono::nanoseconds>(end_ir - start_ir).count() / rounds;
@@ -137,9 +137,9 @@ int main(int argc, char const *argv[])
         {
             for (int32_t i = 0; i < rows; ++i)
             {
-                auto result = tc->insert(rowData);
+                auto result = tc.insert(rowData);
             }
-            tc->reset();
+            tc.reset();
         }
         auto endc = std::chrono::high_resolution_clock::now();
         auto col_time = std::chrono::duration_cast<std::chrono::nanoseconds>(endc - startc).count() / rounds;
@@ -156,7 +156,7 @@ int main(int argc, char const *argv[])
                     tc->m_numRows++;
                 }*/
             }
-            tc->reset();
+            tc.reset();
         }
         auto endc_i = std::chrono::high_resolution_clock::now();
         auto col_i_time = std::chrono::duration_cast<std::chrono::nanoseconds>(endc_i - startc_i).count() / rounds;
@@ -165,8 +165,5 @@ int main(int argc, char const *argv[])
         std::cout << rows << "," << columns << "," << row_time << "," << row_r_time << "," << row_i_time << "," << row_ir_time << ","  << col_time << "," << col_i_time << std::endl;
  
         delete rowData;
-
-        delete tr;
-        delete tc;
     }
 }
