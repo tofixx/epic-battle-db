@@ -4,6 +4,9 @@
 #include <chrono>
 #include <assert.h>
 #include <stdlib.h>
+#include <chrono>
+#include <typeinfo>
+#include <vector>
 
 #include "../sources/table.h"
 #include "../sources/columnStoreTable.h"
@@ -73,43 +76,52 @@ void test_scan_col_table()
     std::cout << "check col store scan DONE" << std::endl;
 }
 
-void execute_scan(Table *table, const int32_t &column_id, const int32_t &comparison_value)
+void execute_scan_row(RowStoreTable &table, const int32_t &column_id, const int32_t &comparison_value)
 {
-    table->table_eq_scan(column_id, comparison_value);
+    table.table_eq_scan(column_id, comparison_value);
 }
 
 int main(int argc, char const *argv[])
 {
     //test_scan_row_table();
     //test_scan_col_table();
-    TimeTimer<> timer(3);
     std::ofstream out("times_scan.csv");
-    out << "style,rows,columns,time ns" << std::endl;
-    for (int32_t rows = 10000; rows <= 1000000; rows *= 10)
+    out << "rows,columns,ms rowstore, ms columnstore" << std::endl;
+    for (int32_t rows = 10000; rows <= 10000000; rows *= 10)
     {
         for (int columns = 1; columns <= 128; columns *= 2)
         {
 
-            std::vector<Table> tables;
-            tables.push_back(RowStoreTable(rows, columns));
-            tables.push_back(ColumnStoreTable(rows, columns));
+            auto row_table = new RowStoreTable(rows, columns);
+            auto column_table = new ColumnStoreTable(rows, columns);
 
-            auto randomValues = getRandomValuesInRange(columns, rows / 500);
-            for (auto table = tables.begin(); table != tables.end(); ++table)
-            {
-                table->generateData(rows, randomValues);
-                auto comparison_value = table->getLocation(0, 3);
-                auto scanTime = timer.measure(execute_scan, *table, 3, comparison_value);
-                if (table == tables.begin())
-                {
-                    out << "row-style," << rows << "," << columns << "," << scanTime << std::endl;
-                }
-                else
-                {
-                    out << "col-style," << rows << "," << columns << "," << scanTime << std::endl;
-                }
-            }
+            auto randomValues = getRandomValuesInRange(columns, (rows / 500));
+
+            row_table->generateData(rows, randomValues);
+            column_table->generateData(rows, randomValues);
+            auto column = columns/2;
+
+            auto comparison_value = row_table->getLocation(0, column);
+            auto start = std::chrono::high_resolution_clock::now();
+            row_table->table_eq_scan(column, comparison_value);
+            auto end = std::chrono::high_resolution_clock::now();
+
+            auto scanTime_row = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+
+            comparison_value = column_table->getLocation(0, column);
+            auto start_col = std::chrono::high_resolution_clock::now();
+            column_table->table_eq_scan(column, comparison_value);
+            auto end_col = std::chrono::high_resolution_clock::now();
+
+            auto scanTime_column = std::chrono::duration_cast<std::chrono::nanoseconds>(end_col - start_col).count();
+
+            out << rows << "," << columns << "," << scanTime_row << "," << scanTime_column << std::endl;
+
             delete[] randomValues;
+            delete row_table;
+            delete column_table;
+
+            std::cout << "completed " << columns << " columns, and " << rows << " rows" << std::endl;
         }
     }
 }
