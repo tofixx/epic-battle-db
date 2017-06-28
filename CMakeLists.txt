@@ -11,11 +11,13 @@ add_executable (create tests/create.cpp)
 add_executable (scan tests/scan.cpp)
 add_executable (materialize tests/materialize.cpp)
 add_executable (insert tests/insert.cpp)
+add_executable (update tests/update.cpp)
 
 target_link_libraries (create table)
 target_link_libraries (scan table)
 target_link_libraries (materialize table)
 target_link_libraries (insert table)
+target_link_libraries (update table)
 
 # test
 #include(CTest)
@@ -23,3 +25,5 @@ target_link_libraries (insert table)
 add_test (scanTest scan)
 #add_test (materializeTest materialize)
 add_test (insertTest insert)
+add_test (updateTest update)
+
