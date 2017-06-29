@@ -123,7 +123,7 @@ int main(int argc, char const *argv[])
         {
             for (int32_t i = 0; i != rows; ++i)
             {
-                memcpy(&tr.getLocation(tr.m_numRows, 0), rowData, sizeof(int32_t) * tr.m_columns);
+                std::memcpy(&tr.getLocation(tr.m_numRows, 0), rowData, sizeof(int32_t) * tr.m_columns);
                 tr.m_numRows++;
             }
             tr.reset();

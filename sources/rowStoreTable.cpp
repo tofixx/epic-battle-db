@@ -41,7 +41,7 @@ int32_t RowStoreTable::insert_row(int32_t *values)
 
     //if (m_numRows < m_maxRows)
     //{
-    memcpy(&this->getLocation(m_numRows, 0), values, sizeof(int32_t) * m_columns);
+    std::memcpy(&this->getLocation(m_numRows, 0), values, sizeof(int32_t) * m_columns);
     return m_numRows++;
     //}
     //else
