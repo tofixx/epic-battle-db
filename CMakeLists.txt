@@ -19,7 +19,7 @@ target_link_libraries (insert table)
 
 # test
 #include(CTest)
-#add_test (createTest create)
+add_test (createTest create)
 add_test (scanTest scan)
-#add_test (materializeTest materialize)
+add_test (materializeTest materialize)
 add_test (insertTest insert)
