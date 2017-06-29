@@ -1,5 +1,4 @@
 #include <assert.h>
-#include <stdio.h>
 #include <cstring>
 
 #include "rowStoreTable.h"

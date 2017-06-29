@@ -1,14 +1,11 @@
 #include <iostream>
-#include <chrono>
 #include <assert.h>
-#include <stdlib.h>
 #include <fstream>
-#include <string>
+#include <cstring>
 
 #include "../sources/table.h"
 #include "../sources/columnStoreTable.h"
 #include "../sources/rowStoreTable.h"
-#include "../sources/timer.h"
 
 /**
 * Returns numValues random Values from 1 - maxValues
