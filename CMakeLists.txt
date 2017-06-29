@@ -11,11 +11,15 @@ add_executable (create tests/create.cpp)
 add_executable (scan tests/scan.cpp)
 add_executable (materialize tests/materialize.cpp)
 add_executable (insert tests/insert.cpp)
+add_executable (benchmark_insert tests/benchmark_insert.cpp)
+add_executable (benchmark_scan tests/benchmark_scan.cpp)
 
 target_link_libraries (create table)
 target_link_libraries (scan table)
 target_link_libraries (materialize table)
 target_link_libraries (insert table)
+target_link_libraries (benchmark_insert table)
+target_link_libraries (benchmark_scan table)
 
 # test
 #include(CTest)
