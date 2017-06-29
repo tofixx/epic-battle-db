@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <fstream>
 #include <cstring>
+#include <chrono>
 
 #include "../sources/table.h"
 #include "../sources/columnStoreTable.h"
