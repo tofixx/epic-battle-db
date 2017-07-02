@@ -28,7 +28,7 @@ uint32_t *getRandomValuesInRange(int32_t numValues, int32_t maxValue)
 
 
 /**
-* Returns a predefined selectivity. Selectivity is 0 to 1, representing a procentual value of distinct values. 0 means ther will be just one value
+* Returns a predefined selectivity. Selectivity is 0 to 100, representing a procentual value of distinct values. 0 means ther will be just one value
 **/
 uint32_t *getValuesWithSelectivity(int32_t numValues, int32_t maxValue, int32_t relativeSelectivity)
 {
@@ -38,7 +38,7 @@ uint32_t *getValuesWithSelectivity(int32_t numValues, int32_t maxValue, int32_t 
         if (relativeSelectivity == 0) {
             returnValues[i] = 1;
         } else {
-            returnValues[i] = relativeSelectivity * maxValue;
+            returnValues[i] = relativeSelectivity * maxValue / 100;
         }
     }
     return returnValues;
@@ -55,10 +55,10 @@ int main(int argc, char const *argv[])
 
     for (int columns = 1; columns <= 128; columns *= 2)
     {
-        for (int relativeSelectivity = 0; relativeSelectivity <= 1; relativeSelectivity += 0.2) {
+        for (int relativeSelectivity = 0; relativeSelectivity <= 100; relativeSelectivity += 20) {
             // start with relativeSelectivity = 0 (means onaly 1 distinct value in every row) and increase it 20% every round until 100% is reached
 
-            std::cout << "Creating table with " << columns << " columns and a selectivity of " << relativeSelectivity << std::endl;
+            std::cout << "Creating table with " << columns << " columns and a selectivity of " << relativeSelectivity << "%" << std::endl;
 
             // create tables
             auto row_table = RowStoreTable(rows, columns);
@@ -70,13 +70,14 @@ int main(int argc, char const *argv[])
 
             // auto randomValues = getRandomValuesInRange(columns, (rows / 500));
 
-            auto distinctValues = getValuesWithSelectivity(columns, rows, 0.1); 
 
-             std::cout << "Distinct vlaues in col 0: " << distinctValues[0] << std::endl;
+            auto selectivityValues = getValuesWithSelectivity(columns, rows, relativeSelectivity); 
 
-            row_table.generateData(rows, distinctValues);
-            column_table.generateData(rows, distinctValues);
-            delete[] distinctValues;
+            std::cout << "Distinct values in col 0: " << selectivityValues[0] << std::endl;
+
+            row_table.generateData(rows, selectivityValues);
+            column_table.generateData(rows, selectivityValues);
+            delete[] selectivityValues;
             auto column = columns/2;
 
 
