@@ -29,6 +29,7 @@ void *test_materialize_row_table_threaded(void *thread)
     if(result->count()) result->print(0, result->count());
     delete result;
     std::cout << "col store materialize executed" << std::endl;
+    return 0;
 }
 
 void *test_materialize_col_table_threaded(void *thread)
@@ -50,6 +51,7 @@ void *test_materialize_col_table_threaded(void *thread)
     if(result->count()) result->print(0, result->count());
     delete result;
     std::cout << "row store materialize executed" << std::endl;
+    return 0;
 }
 
 

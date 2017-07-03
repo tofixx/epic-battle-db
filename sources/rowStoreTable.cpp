@@ -1,4 +1,6 @@
 #include <assert.h>
+#include <cstring>
+
 #include "rowStoreTable.h"
 
 RowStoreTable::RowStoreTable(int32_t maxRows, int32_t columns)
@@ -6,10 +8,10 @@ RowStoreTable::RowStoreTable(int32_t maxRows, int32_t columns)
 {
 }
 
-int32_t &RowStoreTable::getLocation(const int32_t &row, const int32_t &column)
+inline int32_t &RowStoreTable::getLocation(const int32_t &row, const int32_t &column)
 {
-    assert (column < this->m_columns);
-    assert (row < this->m_maxRows);
+    //assert(column < this->m_columns);
+    //assert(row < this->m_maxRows);
     return m_data[row * m_columns + column];
 }
 
@@ -30,4 +32,25 @@ Table *RowStoreTable::position_list_materialize(std::vector<int32_t> &positions,
     }
     delete[] copy_row;
     return table;
+}
+
+int32_t RowStoreTable::insert_row(int32_t *values)
+{
+    //assert(&values[m_columns] != nullptr);
+
+    //if (m_numRows < m_maxRows)
+    //{
+    std::memcpy(&this->getLocation(m_numRows, 0), values, sizeof(int32_t) * m_columns);
+    return m_numRows++;
+    //}
+    //else
+    //{
+    //    return -1;
+    //}
+}
+
+int32_t RowStoreTable::update(int32_t rowIndex, int32_t *values)
+{
+    memcpy(&this->getLocation(rowIndex, 0), values, sizeof(int32_t) * m_columns);
+    return rowIndex;
 }
