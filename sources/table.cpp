@@ -15,21 +15,6 @@ Table::~Table()
     delete[] m_data;
 };
 
-/// <returns>return value on heap!</returns>
-std::vector<int32_t> *Table::table_eq_scan(const int32_t &columnId, const int32_t &value)
-{
-    auto *result = new std::vector<int32_t>(); // todo m_maxRows Länge verwenden
-    for (auto row = 0; row < m_maxRows; ++row)
-    {
-        if (getLocation(row, columnId) == value)
-        {
-            result->push_back(row);
-            // todo immer überschreiben, zähler aber nicht immer hochzählen
-        }
-    }
-    return result;
-}
-
 std::random_device Table::randomDevice;
 std::mt19937 Table::randomGenerator = std::mt19937(Table::randomDevice());                                                                                                // seed the generator
 std::uniform_int_distribution<> Table::randomDistribution = std::uniform_int_distribution<>(std::numeric_limits<int32_t>::lowest(), std::numeric_limits<int32_t>::max()); // define the range
