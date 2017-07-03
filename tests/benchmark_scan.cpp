@@ -37,10 +37,11 @@ int main(int argc, char const *argv[])
 
     for (int columns = 1; columns <= 128; columns *= 2)
     {
+
+
         for (float selectivity = 0; selectivity <= 1; selectivity += 0.2) {
 
-            std::cout << "Creating table with " << columns << " columns and a selectivity of " << selectivity * 100 << "%" << std::endl;
-
+            std::cout << "Scanning table with " << columns << " columns and a selectivity of " << selectivity * 100 << "%" << std::endl;
             // create tables
             auto row_table = RowStoreTable(rows, columns);
             auto column_table = ColumnStoreTable(rows, columns);
@@ -51,13 +52,13 @@ int main(int argc, char const *argv[])
             row_table.generateData(rows, randomValues);
             column_table.generateData(rows, randomValues);
 
+            delete[] randomValues;
+
             auto comparison_value = 10000001;
 
             // Add known data to column 0 with defined selectivity
             row_table.addDataWithSelectivity(selectivity,comparison_value);
             column_table.addDataWithSelectivity(selectivity,comparison_value);
-
-            delete[] randomValues;
 
             // scan tables
             // -> row

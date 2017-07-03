@@ -80,12 +80,11 @@ void Table::generateData(int32_t rows, uint32_t *distinctValues)
 
 void Table::addDataWithSelectivity(float selectivity, int32_t value) {
 
-    if (selectivity > 1 || selectivity < 0) throw std::invalid_argument( "selectivity hast to be between 0 and 1" );
+    if (selectivity > 1 || selectivity < 0) throw std::invalid_argument( "selectivity has to be between 0 and 1" );
 
     // when there is a selectivity of 0 nothing should be added
     if (selectivity == 0 ) return;
 
-    // create vector with same length as table
     std::vector<int32_t> positions;
     for (int i = 0; i < m_numRows; i++)
     {
@@ -97,11 +96,12 @@ void Table::addDataWithSelectivity(float selectivity, int32_t value) {
     std::shuffle(std::begin(positions), std::end(positions), engine);
 
     // fill column with value
-    int numberOfRowsToFill = selectivity * m_numRows;
-    for (int i = 0; i < numberOfRowsToFill; i++)
+    for (int i = 0; i < (selectivity * m_numRows); i++)
     {
         this->getLocation(positions[i], 0) = value;
     }
+
+    positions.clear();
 
 }
 
