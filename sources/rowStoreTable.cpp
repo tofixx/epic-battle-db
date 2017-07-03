@@ -15,6 +15,22 @@ inline int32_t &RowStoreTable::getLocation(const int32_t &row, const int32_t &co
     return m_data[row * m_columns + column];
 }
 
+/// <returns>return value on heap!</returns>
+std::vector<int32_t> *RowStoreTable::table_eq_scan(const int32_t &columnId, const int32_t &value)
+{
+    auto *result = new std::vector<int32_t>();
+    result->reserve(m_maxRows);
+
+    for (auto row = 0; row < m_maxRows; ++row)
+    {
+        if (m_data[row * m_columns + columnId] == value)
+        {
+            result->push_back(row);
+        }
+    }
+    return result;
+}
+
 /// return value on heap!
 Table *RowStoreTable::position_list_materialize(std::vector<int32_t> &positions, const int32_t columns, const int32_t *columnIds)
 {
