@@ -97,7 +97,6 @@ void Table::addDataWithSelectivity(float selectivity, int32_t value) {
 
     // fill column with value
     int numberOfRowsToFill = selectivity * m_numRows;
-    std::cout << numberOfRowsToFill << " rows will be filled with value " << value << std::endl;
     for (int i = 0; i < numberOfRowsToFill; i++)
     {
         this->getLocation(positions[i], 0) = value;
