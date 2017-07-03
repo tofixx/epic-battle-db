@@ -14,7 +14,7 @@ class TimeTimer
 	virtual ~TimeTimer() = default;
 
 	template <typename F, typename... Args>
-	void measure(F func, Args &&... args)
+	typename TimeNs::rep measure(F func, Args &&... args)
 	{
 		std::cout << "\x1B[33mrun " << typeid(func).name() << " for " << m_executionTimes << " times...\x1B[0m\n" << std::endl;
 
@@ -46,6 +46,8 @@ class TimeTimer
 		}
 
 		std::cout << durationNs << "ns total duration; " << avgTimePerCall << "ns average time per call\x1B[0m\n" << std::endl;
+
+		return avgTimePerCall;
 	}
 
   private:

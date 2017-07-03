@@ -1,7 +1,12 @@
 #include <iostream>
+#include <fstream>
+#include <string>
 #include <chrono>
 #include <assert.h>
 #include <stdlib.h>
+#include <chrono>
+#include <typeinfo>
+#include <vector>
 
 #include "../sources/table.h"
 #include "../sources/columnStoreTable.h"
@@ -19,7 +24,7 @@ void test_scan_row_table()
     t.print(0, 9);
     t.print_row(799);
 
-    int32_t search_key = t.getLocation(0,3);
+    int32_t search_key = t.getLocation(0, 3);
     int32_t column = 3;
     auto list = t.table_eq_scan(column, search_key);
 
@@ -43,7 +48,7 @@ void test_scan_col_table()
     t.print(0, 9);
     t.print_row(799);
 
-    int32_t search_key = t.getLocation(0,3);
+    int32_t search_key = t.getLocation(0, 3);
     int32_t column = 3;
     auto list = t.table_eq_scan(column, search_key);
 
@@ -57,6 +62,7 @@ void test_scan_col_table()
     delete list;
     std::cout << "check col store scan DONE" << std::endl;
 }
+
 
 int main(int argc, char const *argv[])
 {

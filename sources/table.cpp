@@ -18,12 +18,13 @@ Table::~Table()
 /// <returns>return value on heap!</returns>
 std::vector<int32_t> *Table::table_eq_scan(const int32_t &columnId, const int32_t &value)
 {
-    auto *result = new std::vector<int32_t>();
+    auto *result = new std::vector<int32_t>(); // todo m_maxRows Länge verwenden
     for (auto row = 0; row < m_maxRows; ++row)
     {
         if (getLocation(row, columnId) == value)
         {
             result->push_back(row);
+            // todo immer überschreiben, zähler aber nicht immer hochzählen
         }
     }
     return result;
@@ -77,20 +78,20 @@ void Table::generateData(int32_t rows, uint32_t *distinctValues)
 int32_t Table::insert(int32_t *values)
 {
     //check if there are enough values in input
-    assert(&values[m_columns] != nullptr);
+    //assert(&values[m_columns] != nullptr);
 
-    if (m_numRows < m_maxRows)
+    //if (m_numRows < m_maxRows)
+    //{
+    for (auto columnIndex = 0; columnIndex != m_columns; ++columnIndex)
     {
-        for (auto columnIndex = 0; columnIndex < m_columns; columnIndex++)
-        {
-            this->getLocation(m_numRows, columnIndex) = int32_t(values[columnIndex]);
-        }
-        return m_numRows++;
+        this->getLocation(m_numRows, columnIndex) = values[columnIndex];
     }
-    else
-    {
-        return -1;
-    }
+    return m_numRows++;
+    //}
+    //else
+    //{
+    //    return -1;
+    //}
 }
 
 void Table::overrideColumn(int32_t columnIndex, int32_t *values)
@@ -114,6 +115,11 @@ int32_t Table::count()
 int32_t Table::size()
 {
     return m_maxRows;
+}
+
+void Table::reset()
+{
+    this->m_numRows = 0;
 }
 
 void Table::print_row(int32_t row)
