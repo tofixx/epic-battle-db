@@ -96,7 +96,7 @@ void Table::addDataWithSelectivity(float selectivity, int32_t value) {
     std::shuffle(std::begin(positions), std::end(positions), engine);
 
     // fill column with value
-    int numberOfRowsToFill = (selectivity == 1) ? 1 : (1 - selectivity) * m_numRows;
+    int numberOfRowsToFill = selectivity * m_numRows;
     std::cout << numberOfRowsToFill << " rows will be filled with value " << value << std::endl;
     for (int i = 0; i < numberOfRowsToFill; i++)
     {

@@ -26,24 +26,6 @@ uint32_t *getRandomValuesInRange(int32_t numValues, int32_t maxValue)
     return returnValues;
 }
 
-
-/**
-* Returns a predefined selectivity. Selectivity is 0 to 100, representing a procentual value of distinct values. 0 means ther will be just one value
-**/
-uint32_t *getValuesWithSelectivity(int32_t numValues, int32_t maxValue, int32_t selectivity)
-{
-    uint32_t *returnValues = new uint32_t[numValues];
-    for (auto i = 0; i < numValues; ++i)
-    {
-        if (selectivity == 0) {
-            returnValues[i] = 1;
-        } else {
-            returnValues[i] = selectivity * maxValue / 100;
-        }
-    }
-    return returnValues;
-}
-
 int main(int argc, char const *argv[])
 {
     std::cout << "Starting scan benchmark... " << std::endl;
@@ -65,41 +47,36 @@ int main(int argc, char const *argv[])
 
             auto randomValues = getRandomValuesInRange(columns, (rows / 500));
 
+            // Populate Table with random data
             row_table.generateData(rows, randomValues);
             column_table.generateData(rows, randomValues);
 
             auto comparison_value = 10000001;
 
+            // Add known data to column 0 with defined selectivity
             row_table.addDataWithSelectivity(selectivity,comparison_value);
             column_table.addDataWithSelectivity(selectivity,comparison_value);
 
             delete[] randomValues;
 
-            auto column = columns/2;
-
             // scan tables
             // -> row
-            // auto comparison_value = row_table.getLocation(0, column); // TODO: replace with know value
-            // std::cout << "comparsion value is " << comparison_value << std::endl;
             auto start = std::chrono::high_resolution_clock::now();
             for (int32_t round = 0; round != rounds; ++round) {
-                row_table.table_eq_scan(column, comparison_value);
+                row_table.table_eq_scan(0, comparison_value); // selectivity values have been added to col 0 
                 // (optional) clear caches
             }
             auto end = std::chrono::high_resolution_clock::now();
             auto scanTime_row = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / rounds;
 
             // -> col
-            comparison_value = column_table.getLocation(0, column); // TODO: replace with know value
             start = std::chrono::high_resolution_clock::now();
             for (int32_t round = 0; round != rounds; ++round) {
-                column_table.table_eq_scan(column, comparison_value);
+                column_table.table_eq_scan(0, comparison_value); // selectivity values have been added to col 0 
                 // (optional) clear caches
             }
             end = std::chrono::high_resolution_clock::now();
             auto scanTime_col = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / rounds;
-
-
 
             // output results
             out << rows << "," << columns << "," << selectivity << "," << scanTime_row << "," << scanTime_col << std::endl;
