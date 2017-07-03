@@ -1,6 +1,8 @@
 #include <iostream>
 #include <limits>
 #include <assert.h>
+#include <algorithm>
+#include <random>
 
 #include "table.h"
 
@@ -74,6 +76,36 @@ void Table::generateData(int32_t rows, uint32_t *distinctValues)
     }
     m_numRows += rows;
 }
+
+void Table::addDataWithSelectivity(float selectivity, int32_t value) {
+
+    if (selectivity > 1 || selectivity < 0) throw std::invalid_argument( "selectivity hast to be between 0 and 1" );
+
+    // when there is a selectivity of 0 nothing should be added
+    if (selectivity == 0 ) return;
+
+    // create vector with same length as table
+    std::vector<int32_t> positions;
+    for (int i = 0; i < m_numRows; i++)
+    {
+        positions.push_back(i);
+    }
+
+    // shuffle vector
+    auto engine = std::default_random_engine{};
+    std::shuffle(std::begin(positions), std::end(positions), engine);
+
+    // fill column with value
+    int numberOfRowsToFill = (selectivity == 1) ? 1 : (1 - selectivity) * m_numRows;
+    std::cout << numberOfRowsToFill << " rows will be filled with value " << value << std::endl;
+    for (int i = 0; i < numberOfRowsToFill; i++)
+    {
+        this->getLocation(positions[i], 0) = value;
+    }
+
+}
+
+
 
 int32_t Table::insert(int32_t *values)
 {
