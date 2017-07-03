@@ -48,3 +48,9 @@ int32_t RowStoreTable::insert_row(int32_t *values)
     //    return -1;
     //}
 }
+
+int32_t RowStoreTable::update(int32_t rowIndex, int32_t *values)
+{
+    memcpy(&this->getLocation(rowIndex, 0), values, sizeof(int32_t) * m_columns);
+    return rowIndex;
+}

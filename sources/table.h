@@ -14,6 +14,7 @@ class Table
      */
     virtual void generateData(int32_t rows, uint32_t *distinctValues);
     virtual int32_t insert(int32_t *values);
+    virtual int32_t update(int32_t rowIndex, int32_t *values);
     virtual void overrideColumn(int32_t columnId, int32_t *values);
     int32_t count();
     int32_t size();

@@ -8,3 +8,4 @@ cmake --build .
 
 ./benchmark_insert
 ./benchmark_scan
+./benchmark_update

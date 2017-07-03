@@ -94,6 +94,16 @@ int32_t Table::insert(int32_t *values)
     //}
 }
 
+int32_t Table::update(int32_t rowIndex, int32_t *values)
+{
+    for (auto columnIndex = 0; columnIndex != m_columns; ++columnIndex)
+    {
+        this->getLocation(rowIndex, columnIndex) = values[columnIndex];
+    }
+    return rowIndex;
+}
+
+
 void Table::overrideColumn(int32_t columnIndex, int32_t *values)
 {
     assert(columnIndex >= 0 && columnIndex < m_columns);
