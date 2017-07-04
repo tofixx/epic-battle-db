@@ -39,3 +39,7 @@ cmake-build-debug
 # Exclude IDE
 .vscode
 .idea
+
+
+# mac
+.DS_Store
