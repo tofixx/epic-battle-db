@@ -64,8 +64,8 @@ int main(int argc, char const *argv[])
             // -> row
             auto start = std::chrono::high_resolution_clock::now();
             for (int32_t round = 0; round != rounds; ++round) {
-                row_table.table_eq_scan(0, comparison_value); // selectivity values have been added to col 0 
-                // (optional) clear caches
+                auto result = row_table.table_eq_scan(0, comparison_value); // selectivity values have been added to col 0
+                delete result;
             }
             auto end = std::chrono::high_resolution_clock::now();
             auto scanTime_row = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / rounds;
@@ -73,8 +73,8 @@ int main(int argc, char const *argv[])
             // -> col
             start = std::chrono::high_resolution_clock::now();
             for (int32_t round = 0; round != rounds; ++round) {
-                column_table.table_eq_scan(0, comparison_value); // selectivity values have been added to col 0 
-                // (optional) clear caches
+                auto result = column_table.table_eq_scan(0, comparison_value); // selectivity values have been added to col 0
+                delete result;
             }
             end = std::chrono::high_resolution_clock::now();
             auto scanTime_col = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / rounds;
