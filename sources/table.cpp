@@ -18,6 +18,15 @@ Table::~Table()
     delete[] m_data;
 };
 
+uint32_t* Table::getRandomValuesInRange(int32_t numValues, int32_t maxValue) {
+    uint32_t *returnValues = new uint32_t[numValues];
+    for (auto i = 0; i < numValues; ++i)
+    {
+        returnValues[i] = (uint32_t)(std::rand() % maxValue + 1);
+    }
+    return returnValues;
+}
+
 std::random_device Table::randomDevice;
 std::mt19937 Table::randomGenerator = std::mt19937(Table::randomDevice());                                                                                                // seed the generator
 std::uniform_int_distribution<> Table::randomDistribution = std::uniform_int_distribution<>(std::numeric_limits<int32_t>::lowest(), std::numeric_limits<int32_t>::max()); // define the range
@@ -63,7 +72,7 @@ void Table::generateData(int32_t rows, uint32_t *distinctValues)
     m_numRows += rows;
 }
 
-void Table::addDataWithSelectivity(float selectivity, int32_t value) {
+void Table::addDataWithSelectivity(float selectivity, int32_t column, int32_t value) {
 
     if (selectivity > 1 || selectivity < 0) throw std::invalid_argument( "selectivity has to be between 0 and 1" );
 
@@ -83,7 +92,7 @@ void Table::addDataWithSelectivity(float selectivity, int32_t value) {
     // fill column with value
     for (int i = 0; i < (selectivity * m_numRows); i++)
     {
-        this->getLocation(positions[i], 0) = value;
+        this->getLocation(positions[i], column) = value;
     }
 
     positions.clear();
