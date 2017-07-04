@@ -12,7 +12,7 @@
 auto rows = 1000000;
 auto columnsLimit = 128;
 auto rounds = 100;
-auto threads = 5;
+auto threads = 8;
 int  thread_ids[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
 /**
