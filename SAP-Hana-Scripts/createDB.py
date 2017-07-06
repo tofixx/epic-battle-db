@@ -50,7 +50,18 @@ def benchmark_old_schema(iterations, data):
     end = time.time()
     total_time = end - start
     iteration_time= total_time / iterations
-    print ("Total time %.2fs, %.2fs average per iteration" % (total_time, iteration_time))    
+    print ("Total time %.2fs, %.2fs average per iteration" % (total_time, iteration_time))
+
+def benchmark_new_schema(iterations, data):
+    start = time.time()
+    for x in range(0, iterations):
+        print(x,"iteration", data[x]['BKPF'])
+        insert(schema_new + ".ACDOCA_R", data[x]['ACDOCA1'])
+        insert(schema_new + ".ACDOCA_R", data[x]['ACDOCA2'])
+    end = time.time()
+    total_time = end - start
+    iteration_time= total_time / iterations
+    print ("Total time %.2fs, %.2fs average per iteration" % (total_time, iteration_time))           
 
 bkpf_columns = [ "MANDT","BUKRS","BELNR","GJAHR","BLART","BLDAT","BUDAT","MONAT","CPUDT","CPUTM","AEDAT","UPDDT","WWERT","USNAM","TCODE","BVORG","XBLNR","DBBLG","STBLG","STJAH","BKTXT","WAERS","KURSF","KZWRS","KZKRS","BSTAT","XNETB","FRATH","XRUEB","GLVOR","GRPID","DOKID","ARCID","IBLAR","AWTYP","AWKEY","FIKRS","HWAER","HWAE2","HWAE3","KURS2","KURS3","BASW2","BASW3","UMRD2","UMRD3","XSTOV","STODT","XMWST","CURT2","CURT3","KUTY2","KUTY3","XSNET","AUSBK","XUSVR","DUEFL","AWSYS","TXKRS","LOTKZ","XWVOF","STGRD","PPNAM","BRNCH","NUMPG","ADISC","XREF1_HD","XREF2_HD","XREVERSAL","REINDAT","RLDNR","LDGRP","PROPMANO","XBLNR_ALT","VATDATE","PSOTY","PSOAK","PSOKS","PSOSG","PSOFN","INTFORM","INTDATE","PSOBT","PSOZL","PSODT","PSOTM","FM_UMART","CCINS","CCNUM","SSBLK","BATCH","SNAME","SAMPLED","EXCLUDE_FLAG","BLIND","OFFSET_STATUS","OFFSET_REFER_DAT","PENRC","KNUMV"]
 bkpf_primary_keys = ["MANDT","BUKRS","BELNR","GJAHR"]
@@ -84,20 +95,24 @@ CREATE INDEX "ACDOCA~BEL" ON "SAPISP"."ACDOCA" ( "BELNR" ASC );
 CREATE INDEX "ACDOCA~ANL" ON "SAPISP"."ACDOCA" ( "ANLN1" ASC )
 """
 
-connector.execute(query_schema_1)
-connector.execute(query_schema_2)
- 
-# Creates the desired databases
-create_table(schema_old + ".BKPF", "ROW", bkpf_columns, bkpf_primary_keys)
-create_table(schema_old + ".BSEG", "ROW", bseg_columns, bseg_primary_keys)
-create_table(schema_new + ".BKPF", "COLUMN", bkpf_columns, bkpf_primary_keys)
-create_table(schema_new + ".BSEG", "COLUMN", bseg_columns, bseg_primary_keys)
 
-# Create reduced databases
-create_table(schema_old + ".BKPF_R", "ROW", bkpf_reduced, bkpf_primary_keys)
-create_table(schema_old + ".BSEG_R", "ROW", bseg_reduced, bseg_primary_keys)
-create_table(schema_old + ".GLT0_R", "ROW", glt0_reduced, glt0_primary_keys)
-create_table(schema_new + ".ACDOCA_R", "COLUMN", acdoca_reduced, acdoca_primary_keys)
+# connector.execute(query_schema_1)
+# connector.execute(query_schema_2)
+ 
+# # Creates the desired databases
+# create_table(schema_old + ".BKPF", "ROW", bkpf_columns, bkpf_primary_keys)
+# create_table(schema_old + ".BSEG", "ROW", bseg_columns, bseg_primary_keys)
+# create_table(schema_new + ".BKPF", "COLUMN", bkpf_columns, bkpf_primary_keys)
+# create_table(schema_new + ".BSEG", "COLUMN", bseg_columns, bseg_primary_keys)
+
+# # Create reduced databases
+# create_table(schema_old + ".BKPF_R", "ROW", bkpf_reduced, bkpf_primary_keys)
+# create_table(schema_old + ".BSEG_R", "ROW", bseg_reduced, bseg_primary_keys)
+# create_table(schema_old + ".GLT0_R", "ROW", glt0_reduced, glt0_primary_keys)
+# create_table(schema_new + ".ACDOCA_R", "COLUMN", acdoca_reduced, acdoca_primary_keys)
+
+connector.truncateTable('TEAM1_OLD.', 'BKPF_R')
+connector.truncateTable('TEAM1_OLD.', 'BSEG_R')
 
 print ("Insert OLD BKPF")
 #benchmark(20, dummy_insert, schema_old + ".BKPF", bkpf_columns)
@@ -114,11 +129,12 @@ print ("Insert NEW BSEG")
 print("Starting real benchmarks")
 data = cid.create_data(20)
 benchmark_old_schema(20, data)
+benchmark_new_schema(20, data)
 
-connector.dropTable('TEAM1_OLD.', 'BKPF')
-connector.dropTable('TEAM1_OLD.', 'BSEG')
-connector.dropTable('TEAM1_NEW.', 'BKPF')
-connector.dropTable('TEAM1_NEW.', 'BSEG')
+#connector.dropTable('TEAM1_OLD.', 'BKPF')
+#connector.dropTable('TEAM1_OLD.', 'BSEG')
+#connector.dropTable('TEAM1_NEW.', 'BKPF')
+#connector.dropTable('TEAM1_NEW.', 'BSEG')
 
 connector.dropTable('TEAM1_OLD.', 'BKPF_R')
 connector.dropTable('TEAM1_OLD.', 'BSEG_R')

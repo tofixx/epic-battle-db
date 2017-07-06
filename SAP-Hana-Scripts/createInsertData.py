@@ -26,19 +26,19 @@ def create_data (amount):
 
 
 def BKPFentry(data):
-    return "800, 1000, %s, 2016, %s, %s, EUR, USD, 1.12, EUR" % (data['BELNR'], str(data['BUDAT']), data['MONAT'])  
+    return "800, 1000, %s, 2016, %s, %s, 'EUR', 'USD', 1.12, 'EUR'" % (data['BELNR'], str(data['BUDAT']), data['MONAT'])  
 
 def BSEGentry(data):
-    entry1 =  "800,1000, %s, 2016, 2, 1000, S, %s, %s, -, 1000, -, ?, 893015, 1000, P-100, 1000, %s, ST, %s, 1010, MANF, %s, %s, 893015" % (data['BELNR'],data['DMBTR'],data['WRBRT'],data['MENGE'], data['AUFNR'],data['VBELN'], data['VBEL2'])
-    entry2 =  "800,1000, %s, 2016, 1, 1000, H, %s, %s, -, 1000, -, ?, 792000, 1000, P-100, 1000, %s, ST, %s, 1010, MANF, %s, %s, 792000" % (data['BELNR'],data['DMBTR'],data['WRBRT'],data['MENGE'], data['AUFNR'],data['VBELN'], data['VBEL2'])
+    entry1 =  "800,1000, %s, 2016, 2, 1000, 'S', %s, %s, '-', 1000, '-', '?', 893015, 1000, 'P-100', 1000, %s, 'ST', %s, 1010, 'MANF', %s, %s, 893015" % (data['BELNR'],data['DMBTR'],data['WRBRT'],data['MENGE'], data['AUFNR'],data['VBELN'], data['VBEL2'])
+    entry2 =  "800,1000, %s, 2016, 1, 1000, 'H', %s, %s, '-', 1000, '-', '?', 792000, 1000, 'P-100', 1000, %s, 'ST', %s, 1010, 'MANF', %s, %s, 792000" % (data['BELNR'],data['DMBTR'],data['WRBRT'],data['MENGE'], data['AUFNR'],data['VBELN'], data['VBEL2'])
     return entry1, entry2
 
 def GLT0entry(data):
     return data['DMBTR']
 
 def ACDOCAentry(data):
-    entry1 = "800, OL, 1000, 2016, %s, %s, 2016, %s, EUR, USD, ST, 893015,  ,  , 1000, 1000,  ,  , , , , %s, %s, %s, S, ,  , %s, , , , , , %s, , , , , " % (data['BELNR'], data['DOCLN'], data['VBELN'], data['DMBTR'], data['KSL'], data['MSL'], data['BUDAT'], data['KDAUF'] )
-    entry2 = "800, OL, 1000, 2016, %s, %s, 2016, %s, EUR, USD, ST, 792000,  ,  , 1000, 1000,  ,  , , , , %s, %s, %s, H, ,  , %s, , , , , , %s, , , , , " % (data['BELNR'], data['DOCLN'], data['VBELN'], data['DMBTR'], data['KSL'], data['MSL'], data['BUDAT'], data['KDAUF'] )
+    entry1 = "800, 'OL', 1000, 2016, %s, %s, 2016, %s, 'EUR', 'USD', 'ST', 893015,  '',  '', 1000, 1000,  '',  '', '', '', '', %s, %s, %s, 'S', '', '', %s, '', '', '', '', '', %s, '', '', '', '', " % (data['BELNR'], data['DOCLN'], data['VBELN'], data['DMBTR'], data['KSL'], data['MSL'], data['BUDAT'], data['KDAUF'] )
+    entry2 = "800, 'OL', 1000, 2016, %s, %s, 2016, %s, 'EUR', 'USD', 'ST', 792000,  '',  '', 1000, 1000,  '',  '', '', '', '', %s, %s, %s, 'H', '', '', %s, '', '', '', '', '', %s, '', '', '', '', " % (data['BELNR'], data['DOCLN'], data['VBELN'], data['DMBTR'], data['KSL'], data['MSL'], data['BUDAT'], data['KDAUF'] )
     return entry1, entry2
 
 def createRandomFloat(lower_limit,upper_limit):

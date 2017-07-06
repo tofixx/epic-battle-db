@@ -34,6 +34,10 @@ def executeFetchCursor(query):
     cursor.execute(query)
     return cursor
 
+def truncateTable(schema,table_name):
+    sql = "TRUNCATE TABLE " + schema + table_name
+    execute(sql)
+
 def dropTable(schema, table_name):
     sql = "DROP TABLE " + schema + table_name
     execute(sql)
