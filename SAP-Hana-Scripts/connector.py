@@ -21,6 +21,7 @@ def connect():
 def execute(query):
     connection = connect()
     cursor = connection.cursor()
+    print(query)
     cursor.execute(query)
     cursor.close
 
