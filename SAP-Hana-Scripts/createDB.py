@@ -69,7 +69,7 @@ bkpf_primary_keys = ["MANDT","BUKRS","BELNR","GJAHR"]
 bkpf_reduced =  [ "MANDT","BUKRS","BELNR","GJAHR","BUDAT","MONAT", "WAERS", "KZWRS","KZKRS","HWAER"]
 bseg_reduced = [ "MANDT","BUKRS","BELNR","GJAHR","BUZEI","GSBER","SHKZG","DMBTR","WRBRT","MWSTS","KOKRS","KOSTL","SAKNR","HKONT","KUNNR","MATNR","WERKS","MENGE","MEINS","AUFNR","PRCTR", "SEGMENT", "VBELN", "VBEL2", "KSTAR"]
 glt0_reduced = [ "MANDT","RLDNR","BUKRS","GJAHR","RACCT","GSBER","SHKZG","RPMAX","HSL01","HSLVT","KSL01","KSLVT"]
-acdoca_reduced = ["RCLNT","RLDNR","RBURKS","GJAHR","BELNR","DOCLN","RYEAR","AWREF","RHCUR","RVUNIT","RACCT","RCNTR","PRCTR","RBUSA","KOKRS","SEGMENT","SCNTR","PPRCTR","SBUSA","PSEGMENT","HSL","KSL","MSL","DRCRK","POPER","FISCYEARPER","BUDAT","BILDAT","KTOPL","REBZUG","REBZJ","REBZZ","KDAUF","KDPOS","MATNR","WERKS","LIFNR","KUNNR"]
+acdoca_reduced = ["RCLNT","RLDNR","RBURKS","GJAHR","BELNR","DOCLN","RYEAR","AWREF","RHCUR","RHCUR2","RVUNIT","RACCT","RCNTR","PRCTR","RBUSA","KOKRS","SEGMENT","SCNTR","PPRCTR","SBUSA","PSEGMENT","HSL","KSL","MSL","DRCRK","POPER","FISCYEARPER","BUDAT","BILDAT","KTOPL","REBZUG","REBZJ","REBZZ","KDAUF","KDPOS","MATNR","WERKS","LIFNR","KUNNR"]
 
 # TODO select correct keys
 acdoca_primary_keys = ["RCLNT"]
@@ -113,6 +113,7 @@ CREATE INDEX "ACDOCA~ANL" ON "SAPISP"."ACDOCA" ( "ANLN1" ASC )
 
 connector.truncateTable('TEAM1_OLD.', 'BKPF_R')
 connector.truncateTable('TEAM1_OLD.', 'BSEG_R')
+connector.truncateTable('TEAM1_NEW.', 'ACDOCA_R')
 
 print ("Insert OLD BKPF")
 #benchmark(20, dummy_insert, schema_old + ".BKPF", bkpf_columns)
@@ -128,7 +129,7 @@ print ("Insert NEW BSEG")
 
 print("Starting real benchmarks")
 data = cid.create_data(20)
-benchmark_old_schema(20, data)
+# benchmark_old_schema(20, data)
 benchmark_new_schema(20, data)
 
 #connector.dropTable('TEAM1_OLD.', 'BKPF')

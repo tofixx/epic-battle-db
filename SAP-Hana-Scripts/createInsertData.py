@@ -17,8 +17,8 @@ def create_data (amount):
         entryDict['BSEG1'] = bseg1
         entryDict['BSEG2'] = bseg2
         entryDict['GLT0'] = GLT0entry(data)
-        acdoca1 = ACDOCAentry(data)
-        acdoca2 = ACDOCAentry(data)
+        acdoca1, acdoca2 = ACDOCAentry(data)
+        
         entryDict['ACDOCA1'] = acdoca1
         entryDict['ACDOCA2'] = acdoca2
         insertData.append(entryDict)
@@ -37,8 +37,8 @@ def GLT0entry(data):
     return data['DMBTR']
 
 def ACDOCAentry(data):
-    entry1 = "800, 'OL', 1000, 2016, %s, %s, 2016, %s, 'EUR', 'USD', 'ST', 893015,  '',  '', 1000, 1000,  '',  '', '', '', '', %s, %s, %s, 'S', '', '', %s, '', '', '', '', '', %s, '', '', '', '', " % (data['BELNR'], data['DOCLN'], data['VBELN'], data['DMBTR'], data['KSL'], data['MSL'], data['BUDAT'], data['KDAUF'] )
-    entry2 = "800, 'OL', 1000, 2016, %s, %s, 2016, %s, 'EUR', 'USD', 'ST', 792000,  '',  '', 1000, 1000,  '',  '', '', '', '', %s, %s, %s, 'H', '', '', %s, '', '', '', '', '', %s, '', '', '', '', " % (data['BELNR'], data['DOCLN'], data['VBELN'], data['DMBTR'], data['KSL'], data['MSL'], data['BUDAT'], data['KDAUF'] )
+    entry1 = "800, 'OL', 1000, 2016, %s, %s, 2016, %s, 'EUR', 'USD', 'ST', 893015,  '',  '', 1000, 1000,  '',  '', '', '', '', %s, %s, %s, 'S', '', '', %s, '', '', '', '', '', %s, '', '', '', '', ''" % (data['BELNR'], data['DOCLN'], data['VBELN'], data['DMBTR'], data['KSL'], data['MSL'], data['BUDAT'], data['KDAUF'] )
+    entry2 = "800, 'OL', 1000, 2016, %s, %s, 2016, %s, 'EUR', 'USD', 'ST', 792000,  '',  '', 1000, 1000,  '',  '', '', '', '', %s, %s, %s, 'H', '', '', %s, '', '', '', '', '', %s, '', '', '', '', ''" % (data['BELNR'], data['DOCLN'], data['VBELN'], data['DMBTR'], data['KSL'], data['MSL'], data['BUDAT'], data['KDAUF'] )
     return entry1, entry2
 
 def createRandomFloat(lower_limit,upper_limit):
