@@ -16,7 +16,9 @@ def create_data (amount):
         bseg1, bseg2 = BSEGentry(data)
         entryDict['BSEG1'] = bseg1
         entryDict['BSEG2'] = bseg2
-        entryDict['GLT0'] = GLT0entry(data)
+        glt01, glt02 = GLT0entry(data)
+        entryDict['GLT01'] = glt01
+        entryDict['GLT02'] = glt02 
         acdoca1, acdoca2 = ACDOCAentry(data)
         
         entryDict['ACDOCA1'] = acdoca1
@@ -29,12 +31,15 @@ def BKPFentry(data):
     return "800, 1000, %s, 2016, %s, %s, 'EUR', 'USD', 1.12, 'EUR'" % (data['BELNR'], str(data['BUDAT']), data['MONAT'])  
 
 def BSEGentry(data):
-    entry1 =  "800,1000, %s, 2016, 2, 1000, 'S', %s, %s, '-', 1000, '-', '?', 893015, 1000, 'P-100', 1000, %s, 'ST', %s, 1010, 'MANF', %s, %s, 893015" % (data['BELNR'],data['DMBTR'],data['WRBRT'],data['MENGE'], data['AUFNR'],data['VBELN'], data['VBEL2'])
-    entry2 =  "800,1000, %s, 2016, 1, 1000, 'H', %s, %s, '-', 1000, '-', '?', 792000, 1000, 'P-100', 1000, %s, 'ST', %s, 1010, 'MANF', %s, %s, 792000" % (data['BELNR'],data['DMBTR'],data['WRBRT'],data['MENGE'], data['AUFNR'],data['VBELN'], data['VBEL2'])
+    entry1 =  "800, 1000, %s, 2016, 2, 1000, 'S', %s, %s, '-', 1000, '-', '?', 893015, 1000, 'P-100', 1000, %s, 'ST', %s, 1010, 'MANF', %s, %s, 893015" % (data['BELNR'],data['DMBTR'],data['WRBRT'],data['MENGE'], data['AUFNR'],data['VBELN'], data['VBEL2'])
+    entry2 =  "800, 1000, %s, 2016, 1, 1000, 'H', %s, %s, '-', 1000, '-', '?', 792000, 1000, 'P-100', 1000, %s, 'ST', %s, 1010, 'MANF', %s, %s, 792000" % (data['BELNR'],data['DMBTR'],data['WRBRT'],data['MENGE'], data['AUFNR'],data['VBELN'], data['VBEL2'])
     return entry1, entry2
 
 def GLT0entry(data):
-    return data['DMBTR']
+    entry1 = "800, 1, 'OL', 2016, 893015, 1000, 'S', 1, %s, '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', 0   , %s, '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', 0" % (data['HSL'], data['KSL1']) 
+    entry2 = "800, 1, 'OL', 2016, 792000, 1000, 'H', 1, %s, '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', 3000, %s, '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', '?', 0" % (data['HSL'], data['KSL1']) 
+    
+    return entry1, entry2
 
 def ACDOCAentry(data):
     entry1 = "800, 'OL', 1000, 2016, %s, %s, 2016, %s, 'EUR', 'USD', 'ST', 893015,  '',  '', 1000, 1000,  '',  '', '', '', '', %s, %s, %s, 'S', '', '', %s, '', '', '', '', '', %s, '', '', '', '', ''" % (data['BELNR'], data['DOCLN'], data['VBELN'], data['DMBTR'], data['KSL'], data['MSL'], data['BUDAT'], data['KDAUF'] )
@@ -62,6 +67,8 @@ def createChangedData():
     data['VBEL2'] = createRandomInt(10000,20000)
     data['DOCLN'] = createRandomInt(1,100)
     data['DOCLN2'] = data['DOCLN'] + 1 
+    data['HSL'] = createRandomInt(1,1000) + dmbtr
+    data['KSL1'] = createRandomInt(1,1000) + (dmbtr * 1.2)
     data['KSL'] = createRandomInt(1,100000)
     data['MSL'] = createRandomInt(1,100000)
     data['KDAUF'] = data['VBEL2']
