@@ -20,7 +20,7 @@ int main(int argc, char const *argv[])
     }
 
     std::ofstream out("times_insert.csv");
-    out << "rows,columns,time ns row store (row insert), time ns row store (by field), time ns row store (inlined insert), time ns row store (inlined row insert), time ns col store (by field), time ns col store (inlined insert)" << std::endl;
+    out << "rows,columns,col store (by field),col store (inlined),row store (by field),row store (inlined),row store (row insert),row store (inlined row insert)" << std::endl;
 
     for (int columns = 1; columns <= 128; columns *= 2)
     {
@@ -29,18 +29,36 @@ int main(int argc, char const *argv[])
         RowStoreTable tr = RowStoreTable(rows, columns);
         ColumnStoreTable tc = ColumnStoreTable(rows, columns);
 
-        // RowStoreTable optimized row insert
-        auto start = std::chrono::high_resolution_clock::now();
+
+        // ColumnStoreTable normal insert
+        auto startc = std::chrono::high_resolution_clock::now();
         for (int32_t round = 0; round != rounds; ++round)
         {
-            for (int32_t i = 0; i != rows; ++i)
+            for (int32_t i = 0; i < rows; ++i)
             {
-                auto result = tr.insert_row(rowData);
+                auto result = tc.insert(rowData);
             }
-            tr.reset();
+            tc.reset();
         }
-        auto end = std::chrono::high_resolution_clock::now();
-        auto row_time = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / rounds;
+        auto endc = std::chrono::high_resolution_clock::now();
+        auto col_time = std::chrono::duration_cast<std::chrono::nanoseconds>(endc - startc).count() / rounds;
+
+        // ColumnStoreTable inlined insert
+        auto startc_i = std::chrono::high_resolution_clock::now();
+        for (int32_t round = 0; round != rounds; ++round)
+        {
+            for (int32_t i = 0; i < rows; ++i)
+            {
+                for (auto columnIndex = 0; columnIndex != tc.m_columns; ++columnIndex)
+                {
+                    tc.m_data[columnIndex * tc.m_maxRows + tc.m_numRows] = rowData[columnIndex];
+                }
+                tc.m_numRows++;
+            }
+            tc.reset();
+        }
+        auto endc_i = std::chrono::high_resolution_clock::now();
+        auto col_i_time = std::chrono::duration_cast<std::chrono::nanoseconds>(endc_i - startc_i).count() / rounds;
 
         // RowStoreTable normal insert
         auto start_r = std::chrono::high_resolution_clock::now();
@@ -72,6 +90,19 @@ int main(int argc, char const *argv[])
         auto end_i = std::chrono::high_resolution_clock::now();
         auto row_i_time = std::chrono::duration_cast<std::chrono::nanoseconds>(end_i - start_i).count() / rounds;
 
+        // RowStoreTable row insert
+        auto start = std::chrono::high_resolution_clock::now();
+        for (int32_t round = 0; round != rounds; ++round)
+        {
+            for (int32_t i = 0; i != rows; ++i)
+            {
+                auto result = tr.insert_row(rowData);
+            }
+            tr.reset();
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+        auto row_time = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / rounds;
+
         // RowStoreTable inlined row insert
         auto start_ir = std::chrono::high_resolution_clock::now();
         for (int32_t round = 0; round != rounds; ++round)
@@ -86,39 +117,9 @@ int main(int argc, char const *argv[])
         auto end_ir = std::chrono::high_resolution_clock::now();
         auto row_ir_time = std::chrono::duration_cast<std::chrono::nanoseconds>(end_ir - start_ir).count() / rounds;
 
-        // ColumnStoreTable normal insert
-        auto startc = std::chrono::high_resolution_clock::now();
-        for (int32_t round = 0; round != rounds; ++round)
-        {
-            for (int32_t i = 0; i < rows; ++i)
-            {
-                auto result = tc.insert(rowData);
-            }
-            tc.reset();
-        }
-        auto endc = std::chrono::high_resolution_clock::now();
-        auto col_time = std::chrono::duration_cast<std::chrono::nanoseconds>(endc - startc).count() / rounds;
 
-        // ColumnStoreTable inlined insert
-        auto startc_i = std::chrono::high_resolution_clock::now();
-        for (int32_t round = 0; round != rounds; ++round)
-        {
-            for (int32_t i = 0; i < rows; ++i)
-            {
-                for (auto columnIndex = 0; columnIndex != tc.m_columns; ++columnIndex)
-                {
-                    //tc.getLocation(tc.m_numRows, columnIndex) = rowData[columnIndex];
-                    tc.m_data[columnIndex * tc.m_maxRows + tc.m_numRows] = rowData[columnIndex];
-                }
-                tc.m_numRows++;
-            }
-            tc.reset();
-        }
-        auto endc_i = std::chrono::high_resolution_clock::now();
-        auto col_i_time = std::chrono::duration_cast<std::chrono::nanoseconds>(endc_i - startc_i).count() / rounds;
-
-        out << rows << "," << columns << "," << row_time << "," << row_r_time << "," << row_i_time << "," << row_ir_time << "," << col_time << "," << col_i_time << std::endl;
-        std::cout << rows << "," << columns << "," << row_time << "," << row_r_time << "," << row_i_time << "," << row_ir_time << ","  << col_time << "," << col_i_time << std::endl;
+        out << rows << "," << columns << "," << col_time << "," << col_i_time << "," << row_r_time << "," << row_i_time << "," << row_time << "," << row_ir_time << std::endl;
+        std::cout << rows << "," << columns << "," << col_time << "," << col_i_time << "," << "," << row_r_time << "," << row_i_time << "," << row_time << "," << row_ir_time << std::endl;
 
         delete rowData;
     }

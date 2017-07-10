@@ -25,10 +25,8 @@ int main(int argc, char const *argv[])
     }
 
 
-    std::cout << "Starting scan benchmark... " << std::endl;
-
     std::ofstream out("times_scan.csv");
-    out << "rows,columns,selectivity,rowstore,columnstore" << std::endl;
+    out << "rows,columns,selectivity,row store,col store" << std::endl;
 
     auto comparison_value = 10000001;
     auto scan_column = 0;
@@ -39,7 +37,6 @@ int main(int argc, char const *argv[])
         for (float selectivity = 0; selectivity <= 1; selectivity += 0.2)
         {
 
-            std::cout << "Scanning table with " << columns << " columns and a selectivity of " << selectivity * 100 << "%" << std::endl;
             // create tables
             auto row_table = RowStoreTable(rows, columns);
             auto column_table = ColumnStoreTable(rows, columns);

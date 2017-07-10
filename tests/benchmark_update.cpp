@@ -35,7 +35,7 @@ int main(int argc, char const *argv[])
     }
 
     std::ofstream out("times_update.csv");
-    out << "rows,columns,time ns row store (row update), time ns col store (inlined update)" << std::endl;
+    out << "rows,columns,row store (row update),col store (by field)" << std::endl;
 
     auto shuffleOrder = getShuffeledRowIndices(rows);
     
