@@ -49,10 +49,16 @@ std::vector<uint32_t> getShuffeledRowIndices(int32_t maxRows)
 
 int main(int argc, char const *argv[])
 {
-    std::ofstream out("times_updates.csv");
+    int32_t rows = 1000;
+    int32_t rounds = 10;
+
+    if (argc > 2) {
+        rows = atoi(argv[1]);
+        rounds = atoi(argv[2]);
+    }
+
+    std::ofstream out("times_update.csv");
     out << "rows,columns,time ns row store (row update), time ns col store (inlined update)" << std::endl;
-    int32_t rows = 100000;
-    int32_t rounds = 100;
 
     auto shuffleOrder = getShuffeledRowIndices(rows);
     

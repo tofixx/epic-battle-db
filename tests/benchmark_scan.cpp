@@ -13,12 +13,18 @@
 #include "../sources/rowStoreTable.h"
 
 
-int32_t rows = 10000000;
-int32_t rounds = 20;
-int32_t max_columns = 128;
-
 int main(int argc, char const *argv[])
 {
+    int32_t rows = 1000;
+    int32_t rounds = 10;
+    int32_t max_columns = 128;
+
+    if (argc > 2) {
+        rows = atoi(argv[1]);
+        rounds = atoi(argv[2]);
+    }
+
+
     std::cout << "Starting scan benchmark... " << std::endl;
 
     std::ofstream out("times_scan.csv");

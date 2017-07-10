@@ -3,6 +3,7 @@
 #include <fstream>
 #include <cstring>
 #include <chrono>
+#include <cstdlib>
 
 #include "../sources/table.h"
 #include "../sources/columnStoreTable.h"
@@ -23,10 +24,16 @@ int32_t *getRandomValuesInRange(int32_t numValues, int32_t maxValue)
 
 int main(int argc, char const *argv[])
 {
+    int32_t rows = 1000;
+    int32_t rounds = 10;
+
+    if (argc > 2) {
+        rows = atoi(argv[1]);
+        rounds = atoi(argv[2]);
+    }
+
     std::ofstream out("times_insert.csv");
     out << "rows,columns,time ns row store (row insert), time ns row store (by field), time ns row store (inlined insert), time ns row store (inlined row insert), time ns col store (by field), time ns col store (inlined insert)" << std::endl;
-    int32_t rows = 100000;
-    int32_t rounds = 1000;
 
     for (int columns = 1; columns <= 128; columns *= 2)
     {

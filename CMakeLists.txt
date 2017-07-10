@@ -37,6 +37,12 @@ add_test (scanTest scan)
 add_test (materializeTest materialize)
 add_test (insertTest insert)
 
+add_test (benchmarkInsertTest benchmark_insert)
+add_test (benchmarkScanTest benchmark_scan)
+add_test (benchmarkUpdateTest benchmark_update)
+if (UNIX)
+add_test (benchmarkThreadTest benchmark_thread)
+endif(UNIX)
 
 # optimization flags
 message("CMAKE_CXX_FLAGS_DEBUG is ${CMAKE_CXX_FLAGS_DEBUG}")
