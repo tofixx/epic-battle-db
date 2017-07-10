@@ -14,6 +14,10 @@ typedef struct thread_data {
     int columnsLimit;
 } tdata_t;
 
+auto comparison_value = 10000001;
+auto scan_column = 0;
+float selectivity = 0.005; // 0,5%
+
 void *test_materialize_row_table_threaded(void *threadarg)
 {
     tdata_t *my_data = (tdata_t *) threadarg;
@@ -23,13 +27,12 @@ void *test_materialize_row_table_threaded(void *threadarg)
         RowStoreTable *t = new RowStoreTable(my_data->rows, columns);
         auto randomValues = RowStoreTable::getRandomUnsignedValuesInRange(columns, 20);
         t->generateData(my_data->rows, randomValues);
+        t->addDataWithSelectivity(selectivity, scan_column, comparison_value);
 
         // scan
-        int32_t search_key = t->getLocation(0, 0);
-        int32_t column = 0;
         auto start = std::chrono::high_resolution_clock::now();
         for (int32_t round = 0; round != my_data->rounds; ++round) {
-            t->table_eq_scan(column, search_key);
+            t->table_eq_scan(scan_column, comparison_value);
         }
         auto end = std::chrono::high_resolution_clock::now();
         auto time = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / my_data->rounds;
@@ -51,17 +54,16 @@ void *test_materialize_col_table_threaded(void *threadarg)
         ColumnStoreTable *t = new ColumnStoreTable(my_data->rows, columns);
         auto randomValues = ColumnStoreTable::getRandomUnsignedValuesInRange(columns, 20);
         t->generateData(my_data->rows, randomValues);
+        t->addDataWithSelectivity(selectivity, scan_column, comparison_value);
 
         // scan
-        int32_t search_key = t->getLocation(0, 0);
-        int32_t column = 0;
         auto start = std::chrono::high_resolution_clock::now();
         for (int32_t round = 0; round != my_data->rounds; ++round) {
-            t->table_eq_scan(column, search_key);
+            t->table_eq_scan(scan_column, comparison_value);
         }
         auto end = std::chrono::high_resolution_clock::now();
         auto time = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / my_data->rounds;
-        std::cout << my_data->rows << ",col, " << columns << "," << time << std::endl;
+        std::cout << my_data->rows << ",col," << columns << "," << time << std::endl;
 
         // cleanup
         delete t;
