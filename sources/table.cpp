@@ -21,11 +21,21 @@ Table::~Table()
 /**
 * Returns numValues random Values from 1 - maxValues
 */
-uint32_t* Table::getRandomValuesInRange(int32_t numValues, int32_t maxValue) {
+uint32_t* Table::getRandomUnsignedValuesInRange(int32_t numValues, int32_t maxValue) {
     uint32_t *returnValues = new uint32_t[numValues];
     for (auto i = 0; i < numValues; ++i)
     {
         returnValues[i] = (uint32_t)(std::rand() % maxValue + 1);
+    }
+    return returnValues;
+}
+
+int32_t* Table::getRandomValuesInRange(int32_t numValues, int32_t maxValue)
+{
+    int32_t *returnValues = new int32_t[numValues];
+    for (auto i = 0; i < numValues; ++i)
+    {
+        returnValues[i] = std::rand() % maxValue + 1;
     }
     return returnValues;
 }

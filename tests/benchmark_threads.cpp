@@ -14,20 +14,6 @@ typedef struct thread_data {
     int columnsLimit;
 } tdata_t;
 
-/**
-* Returns numValues random Values from 1 - maxValues
-*/
-uint32_t *getRandomValuesInRange(int32_t numValues, int32_t maxValue)
-{
-    uint32_t *returnValues = new uint32_t[numValues];
-    for (auto i = 0; i < numValues; ++i)
-    {
-        returnValues[i] = (uint32_t)(std::rand() % maxValue + 1);
-    }
-    return returnValues;
-}
-
-
 void *test_materialize_row_table_threaded(void *threadarg)
 {
     tdata_t *my_data = (tdata_t *) threadarg;
@@ -35,7 +21,7 @@ void *test_materialize_row_table_threaded(void *threadarg)
     for (int columns = 1; columns <= my_data->columnsLimit; columns *= 2) {
         // create
         RowStoreTable *t = new RowStoreTable(my_data->rows, columns);
-        auto randomValues = getRandomValuesInRange(columns, 20);
+        auto randomValues = RowStoreTable::getRandomUnsignedValuesInRange(columns, 20);
         t->generateData(my_data->rows, randomValues);
 
         // scan
@@ -63,7 +49,7 @@ void *test_materialize_col_table_threaded(void *threadarg)
     for (int columns = 1; columns <= my_data->columnsLimit; columns *= 2) {
         // create
         ColumnStoreTable *t = new ColumnStoreTable(my_data->rows, columns);
-        auto randomValues = getRandomValuesInRange(columns, 20);
+        auto randomValues = ColumnStoreTable::getRandomUnsignedValuesInRange(columns, 20);
         t->generateData(my_data->rows, randomValues);
 
         // scan

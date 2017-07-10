@@ -45,7 +45,7 @@ int main(int argc, char const *argv[])
             auto column_table = ColumnStoreTable(rows, columns);
 
             // Populate Table with random data
-            auto randomValues = row_table.getRandomValuesInRange(columns, (rows / 500));
+            auto randomValues = RowStoreTable::getRandomUnsignedValuesInRange(columns, (rows / 500));
             row_table.generateData(rows, randomValues);
             column_table.generateData(rows, randomValues);
             delete[] randomValues;

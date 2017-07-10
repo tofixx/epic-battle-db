@@ -9,19 +9,6 @@
 #include "../sources/columnStoreTable.h"
 #include "../sources/rowStoreTable.h"
 
-/**
-* Returns numValues random Values from 1 - maxValues
-*/
-int32_t *getRandomValuesInRange(int32_t numValues, int32_t maxValue)
-{
-    int32_t *returnValues = new int32_t[numValues];
-    for (auto i = 0; i < numValues; ++i)
-    {
-        returnValues[i] = std::rand() % maxValue + 1;
-    }
-    return returnValues;
-}
-
 int main(int argc, char const *argv[])
 {
     int32_t rows = 1000;
@@ -37,7 +24,7 @@ int main(int argc, char const *argv[])
 
     for (int columns = 1; columns <= 128; columns *= 2)
     {
-        auto rowData = getRandomValuesInRange(columns, 300);
+        auto rowData = RowStoreTable::getRandomValuesInRange(columns, 300);
 
         RowStoreTable tr = RowStoreTable(rows, columns);
         ColumnStoreTable tc = ColumnStoreTable(rows, columns);
