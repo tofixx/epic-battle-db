@@ -11,7 +11,6 @@
 #include "../sources/table.h"
 #include "../sources/columnStoreTable.h"
 #include "../sources/rowStoreTable.h"
-#include "../sources/timer.h"
 
 
 int32_t rows = 10000000;

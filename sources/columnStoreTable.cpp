@@ -9,8 +9,6 @@ ColumnStoreTable::ColumnStoreTable(int32_t maxRows, int32_t columns)
 
 inline int32_t &ColumnStoreTable::getLocation(const int32_t &row, const int32_t &column)
 {
-    //assert (column < this->m_columns);
-    //assert (row < this->m_maxRows);
     return m_data[column * m_maxRows + row];
 }
 
@@ -22,7 +20,7 @@ std::vector<int32_t> *ColumnStoreTable::table_eq_scan(const int32_t &columnId, c
 
     for (auto row = 0; row < m_maxRows; ++row)
     {
-        if (m_data[columnId * m_maxRows + row] == value)
+        if (getLocation(row, columnId) == value)
         {
             result->push_back(row);
         }

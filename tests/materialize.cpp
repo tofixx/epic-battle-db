@@ -6,7 +6,6 @@
 #include "../sources/table.h"
 #include "../sources/columnStoreTable.h"
 #include "../sources/rowStoreTable.h"
-#include "../sources/timer.h"
 
 
 void test_materialize_row_table()

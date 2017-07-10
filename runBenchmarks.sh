@@ -6,7 +6,7 @@ cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 cmake --build . 
 
-#./benchmark_insert
-#./benchmark_scan
-#./benchmark_update
+./benchmark_insert
+./benchmark_scan
+./benchmark_update
 ./benchmark_thread

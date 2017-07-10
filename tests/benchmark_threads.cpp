@@ -7,7 +7,6 @@
 #include "../sources/table.h"
 #include "../sources/columnStoreTable.h"
 #include "../sources/rowStoreTable.h"
-#include "../sources/timer.h"
 
 auto rows = 1000000;
 auto columnsLimit = 128;

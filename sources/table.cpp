@@ -18,6 +18,9 @@ Table::~Table()
     delete[] m_data;
 };
 
+/**
+* Returns numValues random Values from 1 - maxValues
+*/
 uint32_t* Table::getRandomValuesInRange(int32_t numValues, int32_t maxValue) {
     uint32_t *returnValues = new uint32_t[numValues];
     for (auto i = 0; i < numValues; ++i)
@@ -25,23 +28,6 @@ uint32_t* Table::getRandomValuesInRange(int32_t numValues, int32_t maxValue) {
         returnValues[i] = (uint32_t)(std::rand() % maxValue + 1);
     }
     return returnValues;
-}
-
-std::random_device Table::randomDevice;
-std::mt19937 Table::randomGenerator = std::mt19937(Table::randomDevice());                                                                                                // seed the generator
-std::uniform_int_distribution<> Table::randomDistribution = std::uniform_int_distribution<>(std::numeric_limits<int32_t>::lowest(), std::numeric_limits<int32_t>::max()); // define the range
-
-int *Table::generateRandomDistinctValues(int32_t numberOfDistinctValues)
-{
-    int32_t *distinctValues = new int32_t[numberOfDistinctValues];
-
-    for (int i = 0; i < numberOfDistinctValues; i++)
-    {
-        int32_t new_value = Table::randomDistribution(Table::randomGenerator);
-        // TODO: should check if really distinct
-        distinctValues[i] = new_value;
-    }
-    return distinctValues;
 }
 
 int *Table::generateDistinctValues(int32_t numberOfDistinctValues)
@@ -100,24 +86,13 @@ void Table::addDataWithSelectivity(float selectivity, int32_t column, int32_t va
 }
 
 
-
 int32_t Table::insert(int32_t *values)
 {
-    //check if there are enough values in input
-    //assert(&values[m_columns] != nullptr);
-
-    //if (m_numRows < m_maxRows)
-    //{
     for (auto columnIndex = 0; columnIndex != m_columns; ++columnIndex)
     {
         this->getLocation(m_numRows, columnIndex) = values[columnIndex];
     }
     return m_numRows++;
-    //}
-    //else
-    //{
-    //    return -1;
-    //}
 }
 
 int32_t Table::update(int32_t rowIndex, int32_t *values)
@@ -132,10 +107,6 @@ int32_t Table::update(int32_t rowIndex, int32_t *values)
 
 void Table::overrideColumn(int32_t columnIndex, int32_t *values)
 {
-    assert(columnIndex >= 0 && columnIndex < m_columns);
-
-    assert(&values[m_numRows] != nullptr);
-
     this->m_numRows = this->size();
     for (auto rowIndex = 0; rowIndex < m_numRows; rowIndex++)
     {
