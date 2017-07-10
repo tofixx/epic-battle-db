@@ -33,7 +33,7 @@ void *test_materialize_row_table_threaded(void *threadarg)
         }
         auto end = std::chrono::high_resolution_clock::now();
         auto time = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / my_data->rounds;
-        std::cout << ",row," << columns << "," << time << std::endl;
+        std::cout << my_data->rows << ",row," << columns << "," << time << std::endl;
 
         // cleanup
         delete t;
@@ -61,7 +61,7 @@ void *test_materialize_col_table_threaded(void *threadarg)
         }
         auto end = std::chrono::high_resolution_clock::now();
         auto time = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / my_data->rounds;
-        std::cout << ",col, " << columns << "," << time << std::endl;
+        std::cout << my_data->rows << ",col, " << columns << "," << time << std::endl;
 
         // cleanup
         delete t;
