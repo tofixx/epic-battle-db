@@ -2,6 +2,7 @@ cmake_minimum_required (VERSION 3.1)
 project (epic-battle-db)
 set (CMAKE_CXX_STANDARD 14)
 set(CMAKE_BUILD_TYPE Debug)
+find_package (Threads)
 
 # config
 enable_testing()
@@ -16,6 +17,7 @@ add_executable (insert tests/insert.cpp)
 add_executable (benchmark_insert tests/benchmark_insert.cpp)
 add_executable (benchmark_scan tests/benchmark_scan.cpp)
 add_executable (benchmark_update tests/benchmark_update.cpp)
+add_executable (benchmark_thread tests/benchmark_threads.cpp)
 
 target_link_libraries (create table)
 target_link_libraries (scan table)
@@ -25,6 +27,8 @@ target_link_libraries (insert table)
 target_link_libraries (benchmark_insert table)
 target_link_libraries (benchmark_scan table)
 target_link_libraries (benchmark_update table)
+target_link_libraries (benchmark_thread table)
+target_link_libraries (benchmark_thread ${CMAKE_THREAD_LIBS_INIT})
 
 # test
 #include(CTest)
