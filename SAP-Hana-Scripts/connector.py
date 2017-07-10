@@ -29,7 +29,7 @@ class HanaConnector:
     
     def execute(self,query):
         cursor = self.connection.cursor()
-        print(query)
+        #print(query)
         cursor.execute(query)
         cursor.close()
 

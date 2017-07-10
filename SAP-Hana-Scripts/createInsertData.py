@@ -8,6 +8,7 @@ seed(0)
 # Create Schemata:
 
 def create_data (amount):
+    print('create data...')
     insertData = []
     for x in range(0, amount):
         entryDict = dict()
@@ -16,8 +17,10 @@ def create_data (amount):
         bseg1, bseg2 = BSEGentry(data)
         entryDict['BSEG1'] = bseg1
         entryDict['BSEG2'] = bseg2
-        #glt01, glt02 = GLT0entry(data)
         entryDict['GLT0'] = data['HSL']
+        glt01, glt02 = GLT0entry(data)
+        entryDict['GLT01'] = glt01
+        entryDict['GLT02'] = glt02
         acdoca1, acdoca2 = ACDOCAentry(data)
         
         entryDict['ACDOCA1'] = acdoca1
@@ -55,7 +58,7 @@ def createChangedData(x):
     month = createRandomInt(1,12)
     dmbtr = createRandomFloat(1000,4000)
     data = dict()
-    data['BELNR'] = createRandomInt(4900000000,4900005000)
+    data['BELNR'] = 4900000000 + x
     data['BUDAT'] = str(createRandomInt(1,28)) + "-" + str(month) + "-2016"
     data['MONAT'] = str(month)
     data['DMBTR'] = dmbtr
