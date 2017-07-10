@@ -33,6 +33,7 @@
 
 # Exclude build folder
 _build
+build
 cmake-build-debug
 
 # Exclude IDE
@@ -43,3 +44,4 @@ cmake-build-debug
 # Python
 /SAP-Hana-Scripts/__pycache__
 /SAP-Hana-Scripts/config.py
+*.pyc
