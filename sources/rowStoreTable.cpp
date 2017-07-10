@@ -4,7 +4,7 @@
 
 #include "rowStoreTable.h"
 
-RowStoreTable::RowStoreTable(int32_t maxRows, int32_t columns)
+RowStoreTable::RowStoreTable(const int32_t maxRows, const int32_t columns)
     : Table(maxRows, columns)
 {
 }
@@ -15,7 +15,7 @@ inline int32_t &RowStoreTable::getLocation(const int32_t &row, const int32_t &co
 }
 
 /// return value on heap!
-Table *RowStoreTable::position_list_materialize(std::vector<int32_t> &positions, const int32_t columns, const int32_t *columnIds)
+Table *RowStoreTable::position_list_materialize(const std::vector<int32_t> &positions, const int32_t columns, const int32_t *columnIds)
 {
     RowStoreTable *table = new RowStoreTable(positions.size(), columns);
 
@@ -33,13 +33,13 @@ Table *RowStoreTable::position_list_materialize(std::vector<int32_t> &positions,
     return table;
 }
 
-int32_t RowStoreTable::insert_row(int32_t *values)
+int32_t RowStoreTable::insert_row(const int32_t *values)
 {
     std::memcpy(&this->getLocation(m_numRows, 0), values, sizeof(int32_t) * m_columns);
     return m_numRows++;
 }
 
-int32_t RowStoreTable::update_row(int32_t rowIndex, int32_t *values)
+int32_t RowStoreTable::update_row(const int32_t rowIndex, const int32_t *values)
 {
     memcpy(&this->getLocation(rowIndex, 0), values, sizeof(int32_t) * m_columns);
     return rowIndex;
@@ -64,7 +64,7 @@ std::vector<int32_t> *RowStoreTable::table_eq_scan(const int32_t &columnId, cons
     return result;
 }
 
-void RowStoreTable::generateData(int32_t rows, uint32_t *distinctValues)
+void RowStoreTable::generateData(const int32_t rows, const uint32_t *distinctValues)
 {
     for (auto columnIndex = 0; columnIndex < m_columns; columnIndex++)
     {
@@ -81,7 +81,7 @@ void RowStoreTable::generateData(int32_t rows, uint32_t *distinctValues)
     m_numRows += rows;
 }
 
-void RowStoreTable::addDataWithSelectivity(float selectivity, int32_t column, int32_t value) {
+void RowStoreTable::addDataWithSelectivity(const float selectivity, const int32_t column, const int32_t value) {
 
     if (selectivity > 1 || selectivity < 0) throw std::invalid_argument( "selectivity has to be between 0 and 1" );
 
@@ -109,7 +109,7 @@ void RowStoreTable::addDataWithSelectivity(float selectivity, int32_t column, in
 }
 
 
-int32_t RowStoreTable::insert(int32_t *values)
+inline int32_t RowStoreTable::insert(const int32_t *values)
 {
     for (auto columnIndex = 0; columnIndex != m_columns; ++columnIndex)
     {
@@ -118,7 +118,7 @@ int32_t RowStoreTable::insert(int32_t *values)
     return m_numRows++;
 }
 
-int32_t RowStoreTable::update(int32_t rowIndex, int32_t *values)
+inline int32_t RowStoreTable::update(const int32_t rowIndex, const int32_t *values)
 {
     for (auto columnIndex = 0; columnIndex != m_columns; ++columnIndex)
     {
@@ -128,7 +128,7 @@ int32_t RowStoreTable::update(int32_t rowIndex, int32_t *values)
 }
 
 
-void RowStoreTable::overrideColumn(int32_t columnIndex, int32_t *values)
+inline void RowStoreTable::overrideColumn(const int32_t columnIndex, const int32_t *values)
 {
     this->m_numRows = this->size();
     for (auto rowIndex = 0; rowIndex < m_numRows; rowIndex++)
@@ -137,7 +137,7 @@ void RowStoreTable::overrideColumn(int32_t columnIndex, int32_t *values)
     }
 }
 
-void RowStoreTable::print_row(int32_t row)
+void RowStoreTable::print_row(const int32_t row)
 {
     std::cout << "col_" << row << "[";
     for (auto column = 0; column < m_columns; ++column)
@@ -149,10 +149,10 @@ void RowStoreTable::print_row(int32_t row)
     std::cout << "]" << std::endl;
 }
 
-void RowStoreTable::print(int32_t firstRow, int32_t lastRow)
+void RowStoreTable::print(const int32_t firstRow, const int32_t lastRow)
 {
-    for (; firstRow < lastRow; ++firstRow)
+    for (int32_t start = firstRow; start < lastRow; ++start)
     {
-        print_row(firstRow);
+        print_row(start);
     }
 }

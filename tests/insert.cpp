@@ -30,7 +30,6 @@ void test_insert_row_table(int maxRows, int columns, int insertRows, bool printR
     {
         auto rowData = getRandomValuesInRange(columns, 300);
         auto result = t->insert(rowData);
-        // std::cout << "inserted in line " << result << std::endl;
         if (printRow)
         {
             t->print_row(result);
@@ -50,7 +49,6 @@ void test_insert_column_table(int maxRows, int columns, int insertRows)
     {
         auto rowData = getRandomValuesInRange(columns, 300);
         auto result = t->insert(rowData);
-        // std::cout << "inserted in line " << result << std::endl;
         delete rowData;
     }
     delete t;
