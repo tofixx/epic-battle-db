@@ -3,10 +3,17 @@
 
 from connector import HanaConnector 
 import createInsertData as cid
-import time
+import time, sys
 from random import randint, seed
 
 seed(0)
+
+iterations = 100
+if len(sys.argv) == 2:
+    iterations = int(sys.argv[1])
+else:
+    print('use first argument to change iteration amount')
+
 
 conn = HanaConnector()
 
@@ -81,6 +88,7 @@ def initialInsert():
     insert(schema_old + ".GLT0_R", glt02)
 
 def benchmark(iterations):
+    print('calculated times based on avarage of %s iterations.' % iterations)
     data = cid.create_data(iterations)
     print('run old benchmark...')
     old_time = benchmark_old_schema(iterations, data)
@@ -91,6 +99,6 @@ def benchmark(iterations):
 
 truncateTables()
 initialInsert()
-benchmark(10)
+benchmark(iterations)
 conn.close()
 exit()
