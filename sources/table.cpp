@@ -1,9 +1,5 @@
 #include <iostream>
-#include <limits>
-#include <assert.h>
-#include <algorithm>
 #include <random>
-#include <stdexcept>
 
 #include "table.h"
 

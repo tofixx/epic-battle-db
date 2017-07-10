@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <cstring>
 #include <iostream>
+#include <algorithm>
 
 #include "rowStoreTable.h"
 
@@ -82,8 +83,6 @@ void RowStoreTable::generateData(const int32_t rows, const uint32_t *distinctVal
 }
 
 void RowStoreTable::addDataWithSelectivity(const float selectivity, const int32_t column, const int32_t value) {
-
-    if (selectivity > 1 || selectivity < 0) throw std::invalid_argument( "selectivity has to be between 0 and 1" );
 
     // when there is a selectivity of 0 nothing should be added
     if (selectivity == 0 ) return;
