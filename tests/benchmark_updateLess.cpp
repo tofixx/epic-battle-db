@@ -1,0 +1,109 @@
+#include <iostream>
+#include <chrono>
+#include <assert.h>
+#include <algorithm> // std::random_shuffle
+#include <stdlib.h>
+#include <fstream>
+#include <string>
+#include <vector>
+
+#include "../sources/table.h"
+#include "../sources/columnStoreTable.h"
+#include "../sources/rowStoreTable.h"
+
+std::vector<uint32_t> getShuffeledRowIndices(int32_t maxRows)
+{
+    std::vector<uint32_t> indices;
+    for (int i = 0; i < maxRows; ++i)
+    {
+        indices.push_back(i);
+    }
+
+    std::random_shuffle(indices.begin(), indices.end());
+
+    return indices;
+}
+
+int main(int argc, char const *argv[])
+{
+    int32_t rows = 1000;
+    int32_t rounds = 10;
+
+    if (argc > 2) {
+        rows = atoi(argv[1]);
+        rounds = atoi(argv[2]);
+    }
+
+    std::ofstream out("times_updateLess.csv");
+    out << "rows,columns,update,row copy,row store,col store" << std::endl;
+
+    auto shuffleOrder = getShuffeledRowIndices(rows);
+    // which columns to update (has to be the same to compare runs)
+    int updateColumns[17][16] = {
+            {},
+            {0}, // 1
+            {1,7}, // 2
+            {},
+            {2,5,8,13}, // 4
+            {}, {}, {},
+            {0,2,4,6,8,10,12,14}, // 8
+            {}, {}, {}, {}, {}, {}, {},
+            {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15} // 16
+    };
+    
+    for (int columns = 16; columns <= 128; columns *= 2)
+    {
+        for (int update = 1; update <= 16; update *= 2)
+        {
+            auto rowData = RowStoreTable::getRandomValuesInRange(columns, 300);
+            auto distinctValues = RowStoreTable::getRandomUnsignedValuesInRange(columns, 100);
+
+            RowStoreTable tr = RowStoreTable(rows, columns);
+            tr.generateData(rows, distinctValues);
+
+            ColumnStoreTable tc = ColumnStoreTable(rows, columns);
+            tc.generateData(rows, distinctValues);
+
+            // RowStoreTable update
+            auto start = std::chrono::high_resolution_clock::now();
+            for (int32_t round = 0; round != rounds; ++round)
+            {
+                for (int32_t i = 0; i != rows; ++i)
+                {
+                    auto result = tr.update_row(shuffleOrder.at(i), rowData);
+                }
+            }
+            auto end = std::chrono::high_resolution_clock::now();
+            auto copy_time = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / rounds;
+
+            // RowStoreTable update
+            auto startr = std::chrono::high_resolution_clock::now();
+            for (int32_t round = 0; round != rounds; ++round)
+            {
+                for (int32_t i = 0; i != rows; ++i)
+                {
+                    auto result = tr.update(shuffleOrder.at(i), updateColumns[update], update, rowData);
+                }
+            }
+            auto endr = std::chrono::high_resolution_clock::now();
+            auto row_time = std::chrono::duration_cast<std::chrono::nanoseconds>(endr - startr).count() / rounds;
+
+            // ColumnStoreTable update
+            auto startc = std::chrono::high_resolution_clock::now();
+            for (int32_t round = 0; round != rounds; ++round)
+            {
+                for (int32_t i = 0; i < rows; ++i)
+                {
+                    auto result = tc.update(shuffleOrder.at(i), updateColumns[update], update, rowData);
+                }
+            }
+            auto endc = std::chrono::high_resolution_clock::now();
+            auto col_time = std::chrono::duration_cast<std::chrono::nanoseconds>(endc - startc).count() / rounds;
+
+            out << rows << "," << columns << "," << update << "," << copy_time << "," << row_time << "," << col_time << "," << std::endl;
+            std::cout << rows << "," << columns << "," << update << "," << copy_time << "," << row_time << "," << col_time << std::endl;
+
+            delete rowData;
+        }
+    }
+}

@@ -15,6 +15,7 @@ public:
     std::vector<int32_t> *table_eq_scan(const int32_t &columnId, const int32_t &value);
     int32_t insert(const int32_t *values);
     int32_t update(const int32_t rowIndex, const int32_t *values);
+    int32_t update(const int32_t rowIndex, const int32_t *columnsIndex, const int32_t columns, const int32_t *values);
     void overrideColumn(const int32_t columnId,const int32_t *values);
 
     void generateData(const int32_t rows, const uint32_t *distinctValues);

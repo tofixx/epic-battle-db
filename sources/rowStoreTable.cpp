@@ -117,10 +117,20 @@ inline int32_t RowStoreTable::insert(const int32_t *values)
     return m_numRows++;
 }
 
-inline int32_t RowStoreTable::update(const int32_t rowIndex, const int32_t *values)
+int32_t RowStoreTable::update(const int32_t rowIndex, const int32_t *values)
 {
     for (auto columnIndex = 0; columnIndex != m_columns; ++columnIndex)
     {
+        this->getLocation(rowIndex, columnIndex) = values[columnIndex];
+    }
+    return rowIndex;
+}
+
+int32_t RowStoreTable::update(const int32_t rowIndex, const int32_t *columnsIndex, const int32_t columns, const int32_t *values)
+{
+    for (auto index = 0; index != columns; ++index)
+    {
+        auto columnIndex = columnsIndex[index];
         this->getLocation(rowIndex, columnIndex) = values[columnIndex];
     }
     return rowIndex;

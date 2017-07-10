@@ -120,6 +120,15 @@ int32_t ColumnStoreTable::update(const int32_t rowIndex, const int32_t *values)
     return rowIndex;
 }
 
+int32_t ColumnStoreTable::update(const int32_t rowIndex, const int32_t *columnsIndex, const int32_t columns, const int32_t *values)
+{
+    for (auto index = 0; index != columns; ++index)
+    {
+        auto columnIndex = columnsIndex[index];
+        this->getLocation(rowIndex, columnIndex) = values[columnIndex];
+    }
+    return rowIndex;
+}
 
 void ColumnStoreTable::overrideColumn(const int32_t columnIndex, const int32_t *values)
 {
