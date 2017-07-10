@@ -56,7 +56,7 @@ int main(int argc, char const *argv[])
         {
             for (int32_t i = 0; i != rows; ++i)
             {
-                auto result = tr.update(shuffleOrder.at(i), rowData);
+                auto result = tr.update_row(shuffleOrder.at(i), rowData);
             }
         }
         auto end = std::chrono::high_resolution_clock::now();
