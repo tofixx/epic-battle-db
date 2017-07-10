@@ -1,21 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import connector
+from connector import HanaConnector 
 import createInsertData as cid
 import time
 from random import randint, seed
 
 seed(0)
 
+conn = HanaConnector()
+
 def insert(table_name, values):
     query = "INSERT INTO %s VALUES(%s)" % (table_name, values)
-    connector.execute(query)
+    conn.execute(query)
 
 # TODO needs to be defined
 def update(table_name, columns, values, id):
     query = "UPDATE %s SET %s = %s + %s, SET %s = %s + %s where 'RACCT' = %s" % (table_name, columns[0], columns[0], values[0], columns[1], columns[1], values[1], id)
-    connector.execute(query)  
+    conn.execute(query)  
 
 def benchmark(iterations, fun, *args):
     start = time.time()
@@ -54,24 +56,36 @@ def benchmark_new_schema(iterations, data):
     iteration_time= total_time / iterations
     print ("Total time %.2fs, %.2fs average per iteration" % (total_time, iteration_time))           
 
+
+
 schema_old = "TEAM1_OLD"
 schema_new = "TEAM1_NEW"
 
-connector.truncateTable('TEAM1_OLD.', 'BKPF_R')
-connector.truncateTable('TEAM1_OLD.', 'BSEG_R')
-connector.truncateTable('TEAM1_OLD.', 'GLT0_R')
-connector.truncateTable('TEAM1_NEW.', 'ACDOCA_R')
 
-# Initial Insert GLT0
-data = dict()
-data['HSL'] = 1456
-data['KSL1'] = data['HSL'] * 1456
-glt01, glt02 = cid.GLT0entry(data)
-insert(schema_old + ".GLT0_R", glt01)
-insert(schema_old + ".GLT0_R", glt02)
+def truncateTables():
+    conn.truncateTable('TEAM1_OLD.', 'BKPF_R')
+    conn.truncateTable('TEAM1_OLD.', 'BSEG_R')
+    conn.truncateTable('TEAM1_OLD.', 'GLT0_R')
+    conn.truncateTable('TEAM1_NEW.', 'ACDOCA_R')
 
-print("Starting real benchmarks")
-data = cid.create_data(20)
-#benchmark_old_schema(20, data)
-benchmark_new_schema(20, data)
+def initialInsert():
+    # Initial Insert GLT0
+    data = dict()
+    data['HSL'] = 1456
+    data['KSL1'] = data['HSL'] * 1456
+    glt01, glt02 = cid.GLT0entry(data)
+    insert(schema_old + ".GLT0_R", glt01)
+    insert(schema_old + ".GLT0_R", glt02)
 
+def benchmark():
+    print("Starting real benchmarks")
+    data = cid.create_data(20)
+    #benchmark_old_schema(20, data)
+    benchmark_new_schema(20, data)
+
+
+truncateTables()
+initialInsert()
+benchmark()
+conn.close()
+exit()

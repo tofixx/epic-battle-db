@@ -11,7 +11,7 @@ def create_data (amount):
     insertData = []
     for x in range(0, amount):
         entryDict = dict()
-        data = createChangedData()
+        data = createChangedData(x)
         entryDict['BKPF'] = BKPFentry(data)
         bseg1, bseg2 = BSEGentry(data)
         entryDict['BSEG1'] = bseg1
@@ -42,7 +42,7 @@ def GLT0entry(data):
 
 def ACDOCAentry(data):
     entry1 = "800, 'OL', 1000, 2016, %s, %s, 2016, %s, 'EUR', 'USD', 'ST', 893015,  '',  '', 1000, 1000,  '',  '', '', '', '', %s, %s, %s, 'S', '', '', %s, '', '', '', '', '', %s, '', '', '', '', ''" % (data['BELNR'], data['DOCLN'], data['VBELN'], data['DMBTR'], data['KSL'], data['MSL'], data['BUDAT'], data['KDAUF'] )
-    entry2 = "800, 'OL', 1000, 2016, %s, %s, 2016, %s, 'EUR', 'USD', 'ST', 792000,  '',  '', 1000, 1000,  '',  '', '', '', '', %s, %s, %s, 'H', '', '', %s, '', '', '', '', '', %s, '', '', '', '', ''" % (data['BELNR'], data['DOCLN'], data['VBELN'], data['DMBTR'], data['KSL'], data['MSL'], data['BUDAT'], data['KDAUF'] )
+    entry2 = "800, 'OL', 1000, 2016, %s, %s, 2016, %s, 'EUR', 'USD', 'ST', 792000,  '',  '', 1000, 1000,  '',  '', '', '', '', %s, %s, %s, 'H', '', '', %s, '', '', '', '', '', %s, '', '', '', '', ''" % (data['BELNR'], data['DOCLN2'], data['VBELN'], data['DMBTR'], data['KSL'], data['MSL'], data['BUDAT'], data['KDAUF'] )
     return entry1, entry2
 
 def createRandomFloat(lower_limit,upper_limit):
@@ -51,7 +51,7 @@ def createRandomFloat(lower_limit,upper_limit):
 def createRandomInt(lower_limit, upper_limit):
     return  randint(lower_limit, upper_limit)
 
-def createChangedData():
+def createChangedData(x):
     month = createRandomInt(1,12)
     dmbtr = createRandomFloat(1000,4000)
     data = dict()
@@ -64,8 +64,8 @@ def createChangedData():
     data['MENGE'] = createRandomInt(1,20)
     data['VBELN'] = createRandomInt(80000000,80090000)
     data['VBEL2'] = createRandomInt(10000,20000)
-    data['DOCLN'] = createRandomInt(1,100)
-    data['DOCLN2'] = data['DOCLN'] + 1 
+    data['DOCLN'] = 2 * x
+    data['DOCLN2'] = 2 * x + 1
     data['HSL'] = createRandomInt(1,1000) + dmbtr
     data['KSL1'] = createRandomInt(1,1000) + (dmbtr * 1.2)
     data['KSL'] = createRandomInt(1,100000)
