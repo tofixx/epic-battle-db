@@ -18,9 +18,6 @@ def create_data (amount):
         entryDict['BSEG1'] = bseg1
         entryDict['BSEG2'] = bseg2
         entryDict['GLT0'] = data['HSL']
-        glt01, glt02 = GLT0entry(data)
-        entryDict['GLT01'] = glt01
-        entryDict['GLT02'] = glt02
         acdoca1, acdoca2 = ACDOCAentry(data)
         
         entryDict['ACDOCA1'] = acdoca1

@@ -16,8 +16,7 @@ def insert(table_name, values):
 
 # TODO needs to be defined
 def update(table_name, columns, values, id):
-    query = "UPDATE %s SET %s = %s + %s, SET %s = %s + %s where 'RACCT' = %s" % (table_name, columns[0], columns[0], values[0], columns[1], columns[1], values[1], id)
-    print (query)
+    query = "UPDATE %s SET %s = %s + '%s', %s = %s + '%s' where 'RACCT' = '%s'" % (table_name, columns[0], columns[0], values[0], columns[1], columns[1], values[1], id)
     conn.execute(query)  
 
 def benchmark(iterations, fun, *args):
@@ -39,8 +38,8 @@ def benchmark_old_schema(iterations, data):
         hsl = float(data[x]['GLT0'])
         ksl = hsl * 1.12
 
-        update(schema_old + ".GLT0_R", ["HSL0", "KSL01"],[hsl, ksl], 893015)
-        update(schema_old + ".GLT0_R", ["'HSL01'", "'KSL01'"],[hsl, ksl], 792000)
+        update(schema_old + ".GLT0_R", ["HSL01", "KSL01"],[hsl, ksl], 893015)
+        update(schema_old + ".GLT0_R", ["HSL01", "KSL01"],[hsl, ksl], 792000)
 
     end = time.time()
     total_time = end - start
