@@ -40,6 +40,10 @@ cmake-build-debug
 .vscode
 .idea
 
+# Python
+/SAP-Hana-Scripts/__pycache__
+/SAP-Hana-Scripts/config.py
+*.pyc
 
 # mac
 .DS_Store
