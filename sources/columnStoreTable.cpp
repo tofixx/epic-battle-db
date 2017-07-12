@@ -47,14 +47,11 @@ Table *ColumnStoreTable::position_list_materialize(const std::vector<int32_t> &p
 std::vector<int32_t> *ColumnStoreTable::table_eq_scan(const int32_t &columnId, const int32_t &value)
 {
     auto *result = new std::vector<int32_t>();
-    result->reserve(m_maxRows);
 
+    bool val = false;
     for (auto row = 0; row < m_maxRows; ++row)
     {
-        if (getLocation(row, columnId) == value)
-        {
-            result->push_back(row);
-        }
+        val = getLocation(row, columnId) == value;
     }
     return result;
 }

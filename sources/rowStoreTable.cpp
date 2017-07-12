@@ -53,14 +53,11 @@ int32_t RowStoreTable::update_row(const int32_t rowIndex, const int32_t *values)
 std::vector<int32_t> *RowStoreTable::table_eq_scan(const int32_t &columnId, const int32_t &value)
 {
     auto *result = new std::vector<int32_t>();
-    result->reserve(m_maxRows);
 
+    bool val = false;
     for (auto row = 0; row < m_maxRows; ++row)
     {
-        if (getLocation(row, columnId) == value)
-        {
-            result->push_back(row);
-        }
+        val = getLocation(row, columnId) == value;
     }
     return result;
 }
