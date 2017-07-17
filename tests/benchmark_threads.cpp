@@ -32,7 +32,10 @@ void *test_materialize_row_table_threaded(void *threadarg)
         // scan
         auto start = std::chrono::high_resolution_clock::now();
         for (int32_t round = 0; round != my_data->rounds; ++round) {
-            t->table_eq_scan(scan_column, comparison_value);
+            for (auto row = 0; row < t->m_maxRows; ++row)
+            {
+                bool res = t->m_data[row * t->m_columns + scan_column] == comparison_value;
+            }
         }
         auto end = std::chrono::high_resolution_clock::now();
         auto time = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / my_data->rounds;
@@ -59,7 +62,10 @@ void *test_materialize_col_table_threaded(void *threadarg)
         // scan
         auto start = std::chrono::high_resolution_clock::now();
         for (int32_t round = 0; round != my_data->rounds; ++round) {
-            t->table_eq_scan(scan_column, comparison_value);
+            for (auto row = 0; row < t->m_maxRows; ++row)
+            {
+                bool res = t->m_data[scan_column * t->m_maxRows + row] == comparison_value;
+            }
         }
         auto end = std::chrono::high_resolution_clock::now();
         auto time = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / my_data->rounds;
