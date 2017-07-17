@@ -29,14 +29,16 @@ void *test_materialize_row_table_threaded(void *threadarg)
         t->generateData(my_data->rows, randomValues);
         t->addDataWithSelectivity(selectivity, scan_column, comparison_value);
 
+        auto data = t->m_data;
         auto maxRows = t->m_maxRows;
         auto mColumns = t->m_columns;
+
         // scan
         auto start = std::chrono::high_resolution_clock::now();
         for (int32_t round = 0; round != my_data->rounds; ++round) {
             for (auto row = 0; row < maxRows; ++row)
             {
-                bool res = t->m_data[row * mColumns + scan_column] == comparison_value;
+                bool res = data[row * mColumns + scan_column] == comparison_value;
             }
         }
         auto end = std::chrono::high_resolution_clock::now();
@@ -61,13 +63,15 @@ void *test_materialize_col_table_threaded(void *threadarg)
         t->generateData(my_data->rows, randomValues);
         t->addDataWithSelectivity(selectivity, scan_column, comparison_value);
 
+        auto data = t->m_data;
         auto maxRows = t->m_maxRows;
+
         // scan
         auto start = std::chrono::high_resolution_clock::now();
         for (int32_t round = 0; round != my_data->rounds; ++round) {
             for (auto row = 0; row < maxRows; ++row)
             {
-                bool res = t->m_data[scan_column * maxRows + row] == comparison_value;
+                bool res = data[scan_column * maxRows + row] == comparison_value;
             }
         }
         auto end = std::chrono::high_resolution_clock::now();
