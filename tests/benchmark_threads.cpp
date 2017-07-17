@@ -7,6 +7,7 @@
 #include "../sources/table.h"
 #include "../sources/columnStoreTable.h"
 #include "../sources/rowStoreTable.h"
+#include <sys/time.h>
 
 typedef struct thread_data {
     int rows;
@@ -21,6 +22,7 @@ float selectivity = 0.005; // 0,5%
 void *test_materialize_row_table_threaded(void *threadarg)
 {
     tdata_t *my_data = (tdata_t *) threadarg;
+    struct timeval startOfDay, endOfDay;
 
     for (int columns = 1; columns <= my_data->columnsLimit; columns *= 2) {
         // create
@@ -29,21 +31,27 @@ void *test_materialize_row_table_threaded(void *threadarg)
         t->generateData(my_data->rows, randomValues);
         t->addDataWithSelectivity(selectivity, scan_column, comparison_value);
 
-        auto data = t->m_data;
+        auto *data = t->m_data;
         auto maxRows = t->m_maxRows;
         auto mColumns = t->m_columns;
 
         // scan
+        gettimeofday(&startOfDay, NULL);
         auto start = std::chrono::high_resolution_clock::now();
-        for (int32_t round = 0; round != my_data->rounds; ++round) {
+        for (int32_t round = 0; round < my_data->rounds; ++round) {
             for (auto row = 0; row < maxRows; ++row)
             {
                 bool res = data[row * mColumns + scan_column] == comparison_value;
             }
         }
+        gettimeofday(&endOfDay, NULL);
+        auto seconds  = endOfDay.tv_sec  - startOfDay.tv_sec;
+        auto useconds = endOfDay.tv_usec - startOfDay.tv_usec;
+        auto mtime = ((seconds) * 1000000000 + useconds * 1000);
+
         auto end = std::chrono::high_resolution_clock::now();
         auto time = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / my_data->rounds;
-        std::cout << my_data->rows << ",row," << columns << "," << time << std::endl;
+        std::cout << my_data->rows << ",row," << columns << "," << time << "," << mtime / my_data->rounds << std::endl;
 
         // cleanup
         delete t;
@@ -55,6 +63,7 @@ void *test_materialize_row_table_threaded(void *threadarg)
 void *test_materialize_col_table_threaded(void *threadarg)
 {
     tdata_t *my_data = (tdata_t *) threadarg;
+    struct timeval startOfDay, endOfDay;
 
     for (int columns = 1; columns <= my_data->columnsLimit; columns *= 2) {
         // create
@@ -63,20 +72,27 @@ void *test_materialize_col_table_threaded(void *threadarg)
         t->generateData(my_data->rows, randomValues);
         t->addDataWithSelectivity(selectivity, scan_column, comparison_value);
 
-        auto data = t->m_data;
+        auto *data = t->m_data;
         auto maxRows = t->m_maxRows;
 
         // scan
+        gettimeofday(&startOfDay, NULL);
         auto start = std::chrono::high_resolution_clock::now();
-        for (int32_t round = 0; round != my_data->rounds; ++round) {
+        for (int32_t round = 0; round < my_data->rounds; ++round) {
             for (auto row = 0; row < maxRows; ++row)
             {
                 bool res = data[scan_column * maxRows + row] == comparison_value;
             }
         }
+        gettimeofday(&endOfDay, NULL);
+        auto seconds  = endOfDay.tv_sec  - startOfDay.tv_sec;
+        auto useconds = endOfDay.tv_usec - startOfDay.tv_usec;
+        auto mtime = ((seconds) * 1000000000 + useconds * 1000);
+
+
         auto end = std::chrono::high_resolution_clock::now();
         auto time = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / my_data->rounds;
-        std::cout << my_data->rows << ",col," << columns << "," << time << std::endl;
+        std::cout << my_data->rows << ",col," << columns << "," << time << "," << mtime / my_data->rounds << std::endl;
 
         // cleanup
         delete t;
