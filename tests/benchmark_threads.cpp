@@ -29,12 +29,14 @@ void *test_materialize_row_table_threaded(void *threadarg)
         t->generateData(my_data->rows, randomValues);
         t->addDataWithSelectivity(selectivity, scan_column, comparison_value);
 
+        auto maxRows = t->m_maxRows;
+        auto mColumns = t->m_columns;
         // scan
         auto start = std::chrono::high_resolution_clock::now();
         for (int32_t round = 0; round != my_data->rounds; ++round) {
-            for (auto row = 0; row < t->m_maxRows; ++row)
+            for (auto row = 0; row < maxRows; ++row)
             {
-                bool res = t->m_data[row * t->m_columns + scan_column] == comparison_value;
+                bool res = t->m_data[row * mColumns + scan_column] == comparison_value;
             }
         }
         auto end = std::chrono::high_resolution_clock::now();
@@ -59,12 +61,13 @@ void *test_materialize_col_table_threaded(void *threadarg)
         t->generateData(my_data->rows, randomValues);
         t->addDataWithSelectivity(selectivity, scan_column, comparison_value);
 
+        auto maxRows = t->m_maxRows;
         // scan
         auto start = std::chrono::high_resolution_clock::now();
         for (int32_t round = 0; round != my_data->rounds; ++round) {
-            for (auto row = 0; row < t->m_maxRows; ++row)
+            for (auto row = 0; row < maxRows; ++row)
             {
-                bool res = t->m_data[scan_column * t->m_maxRows + row] == comparison_value;
+                bool res = t->m_data[scan_column * maxRows + row] == comparison_value;
             }
         }
         auto end = std::chrono::high_resolution_clock::now();
@@ -121,6 +124,11 @@ int main(int argc, char const *argv[])
     pthread_join(threadInstances[0], NULL);
     pthread_create(&threadInstances[0], NULL, test_materialize_col_table_threaded, tdata);
     pthread_join(threadInstances[0], NULL);
+
+
+    std::cout << "No thread:" << std::endl;
+    test_materialize_row_table_threaded(tdata);
+    test_materialize_col_table_threaded(tdata);
 
     return 0;
 }
