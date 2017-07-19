@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import connector
+from connector import HanaConnector 
 import createInsertData as cid
 import time
 from random import randint, seed
 
 seed(0)
 
-
+conn = HanaConnector()
 
 # Create Schemata:
 
@@ -16,16 +16,16 @@ def create_table (table_name, table_type, columns, primary_keys):
     column_query = " NVARCHAR(20), ".join(columns) + " NVARCHAR(20), "
     primary_key_query = ", ".join(primary_keys)
     query = "create %s table %s (%s PRIMARY KEY(%s));" % (table_type, table_name, column_query, primary_key_query)
-    connector.execute(query)
+    conn.execute(query)
 
 def dummy_insert(table_name, columns):
     values = ",".join([ str(randint(0, 100)) for i in range(len(columns))])
     query = "INSERT INTO %s VALUES(%s)" % (table_name, values)
-    connector.execute(query)
+    conn.execute(query)
 
 def insert(table_name, values):
     query = "INSERT INTO %s VALUES(%s)" % (table_name, values)
-    connector.execute(query)
+    conn.execute(query)
 
 # TODO needs to be defined
 def update(table_name, values, columns):
@@ -113,10 +113,12 @@ create_table(schema_old + ".BSEG_R", "ROW", bseg_reduced, bseg_primary_keys)
 create_table(schema_old + ".GLT0_R", "ROW", glt0_reduced, glt0_primary_keys)
 create_table(schema_new + ".ACDOCA_R", "COLUMN", acdoca_reduced, acdoca_primary_keys)
 
-connector.truncateTable('TEAM1_OLD.', 'BKPF_R')
-connector.truncateTable('TEAM1_OLD.', 'BSEG_R')
-connector.truncateTable('TEAM1_OLD.', 'GLT0_R')
-connector.truncateTable('TEAM1_NEW.', 'ACDOCA_R')
+conn.truncateTable('TEAM1_OLD.', 'BKPF_R')
+conn.truncateTable('TEAM1_OLD.', 'BSEG_R')
+conn.truncateTable('TEAM1_OLD.', 'GLT0_R')
+conn.truncateTable('TEAM1_NEW.', 'ACDOCA_R')
+conn.truncateTable('TEAM1_NEW.', 'BKPF_R')
+
 
 # print ("Insert OLD BKPF")
 #benchmark(20, dummy_insert, schema_old + ".BKPF", bkpf_columns)
