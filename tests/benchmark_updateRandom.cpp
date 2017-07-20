@@ -34,7 +34,7 @@ int main(int argc, char const *argv[])
         rounds = atoi(argv[2]);
     }
 
-    std::ofstream out("times_updateLess.csv");
+    std::ofstream out("times_updateRandom.csv");
     out << "rows,columns,update,row copy,row store,col store" << std::endl;
 
     auto shuffleOrder = getShuffeledRowIndices(rows);
