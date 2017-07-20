@@ -47,3 +47,7 @@ cmake-build-debug
 
 # mac
 .DS_Store
+
+#
+times_*.csv
+~$*

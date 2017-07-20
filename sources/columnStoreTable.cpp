@@ -49,15 +49,29 @@ std::vector<int32_t> *ColumnStoreTable::table_eq_scan(const int32_t &columnId, c
     auto *result = new std::vector<int32_t>();
     result->reserve(m_maxRows);
 
+    int32_t *start = &m_data[columnId * m_maxRows];
     for (auto row = 0; row < m_maxRows; ++row)
     {
-        if (getLocation(row, columnId) == value)
+        if (start[row] == value)
         {
             result->push_back(row);
         }
     }
     return result;
 }
+
+int32_t ColumnStoreTable::table_eq_count(const int32_t &columnId, const int32_t &value)
+{
+    int32_t result = 0;
+
+    int32_t *start = &m_data[columnId * m_maxRows];
+    for (auto row = 0; row < m_maxRows; ++row)
+    {
+        result += start[row] == value;
+    }
+    return result;
+}
+
 
 void ColumnStoreTable::generateData(const int32_t rows, const uint32_t *distinctValues)
 {
