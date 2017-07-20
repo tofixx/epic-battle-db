@@ -17,12 +17,11 @@ typedef struct thread_data {
 
 auto comparison_value = 10000001;
 auto scan_column = 0;
-float selectivity = 0.005; // 0,5%
+float selectivity = 0.0001; // 0,01%
 
-void *test_materialize_row_table_threaded(void *threadarg)
+void *test_scan_count_row_table_threaded(void *threadarg)
 {
     tdata_t *my_data = (tdata_t *) threadarg;
-    struct timeval startOfDay, endOfDay;
 
     for (int columns = 1; columns <= my_data->columnsLimit; columns *= 2) {
         // create
@@ -31,27 +30,14 @@ void *test_materialize_row_table_threaded(void *threadarg)
         t->generateData(my_data->rows, randomValues);
         t->addDataWithSelectivity(selectivity, scan_column, comparison_value);
 
-        auto *data = t->m_data;
-        auto maxRows = t->m_maxRows;
-        auto mColumns = t->m_columns;
-
         // scan
-        gettimeofday(&startOfDay, NULL);
         auto start = std::chrono::high_resolution_clock::now();
         for (int32_t round = 0; round < my_data->rounds; ++round) {
-            for (auto row = 0; row < maxRows; ++row)
-            {
-                bool res = data[row * mColumns + scan_column] == comparison_value;
-            }
+            t->table_eq_count(scan_column, comparison_value);
         }
-        gettimeofday(&endOfDay, NULL);
-        auto seconds  = endOfDay.tv_sec  - startOfDay.tv_sec;
-        auto useconds = endOfDay.tv_usec - startOfDay.tv_usec;
-        auto mtime = ((seconds) * 1000000000 + useconds * 1000);
-
         auto end = std::chrono::high_resolution_clock::now();
         auto time = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / my_data->rounds;
-        std::cout << my_data->rows << ",row," << columns << "," << time << "," << mtime / my_data->rounds << std::endl;
+        std::cout << my_data->rows << ",row," << columns << "," << time << std::endl;
 
         // cleanup
         delete t;
@@ -60,7 +46,7 @@ void *test_materialize_row_table_threaded(void *threadarg)
     return 0;
 }
 
-void *test_materialize_col_table_threaded(void *threadarg)
+void *test_scan_count_col_table_threaded(void *threadarg)
 {
     tdata_t *my_data = (tdata_t *) threadarg;
     struct timeval startOfDay, endOfDay;
@@ -76,23 +62,13 @@ void *test_materialize_col_table_threaded(void *threadarg)
         auto maxRows = t->m_maxRows;
 
         // scan
-        gettimeofday(&startOfDay, NULL);
         auto start = std::chrono::high_resolution_clock::now();
         for (int32_t round = 0; round < my_data->rounds; ++round) {
-            for (auto row = 0; row < maxRows; ++row)
-            {
-                bool res = data[scan_column * maxRows + row] == comparison_value;
-            }
+            t->table_eq_count(scan_column, comparison_value);
         }
-        gettimeofday(&endOfDay, NULL);
-        auto seconds  = endOfDay.tv_sec  - startOfDay.tv_sec;
-        auto useconds = endOfDay.tv_usec - startOfDay.tv_usec;
-        auto mtime = ((seconds) * 1000000000 + useconds * 1000);
-
-
         auto end = std::chrono::high_resolution_clock::now();
         auto time = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / my_data->rounds;
-        std::cout << my_data->rows << ",col," << columns << "," << time << "," << mtime / my_data->rounds << std::endl;
+        std::cout << my_data->rows << ",col," << columns << "," << time << std::endl;
 
         // cleanup
         delete t;
@@ -125,7 +101,7 @@ int main(int argc, char const *argv[])
 
     std::cout << "RowStore with " << threads << " Threads:" << std::endl;
     for (int i = 0; i < threads; i++) {
-        pthread_create(&threadInstances[i], NULL, test_materialize_row_table_threaded, tdata);
+        pthread_create(&threadInstances[i], NULL, test_scan_count_row_table_threaded, tdata);
     }
     for (int i = 0; i < threads; i++) {
         pthread_join(threadInstances[i], NULL);
@@ -133,22 +109,22 @@ int main(int argc, char const *argv[])
 
     std::cout << "ColStore with " << threads << " Threads:" << std::endl;
     for (int i = 0; i < threads; i++) {
-        pthread_create(&threadInstances[i], NULL, test_materialize_col_table_threaded, tdata);
+        pthread_create(&threadInstances[i], NULL, test_scan_count_col_table_threaded, tdata);
     }
     for (int i = 0; i < threads; i++) {
         pthread_join(threadInstances[i], NULL);
     }
 
     std::cout << "Singlethreaded:" << std::endl;
-    pthread_create(&threadInstances[0], NULL, test_materialize_row_table_threaded, tdata);
+    pthread_create(&threadInstances[0], NULL, test_scan_count_row_table_threaded, tdata);
     pthread_join(threadInstances[0], NULL);
-    pthread_create(&threadInstances[0], NULL, test_materialize_col_table_threaded, tdata);
+    pthread_create(&threadInstances[0], NULL, test_scan_count_col_table_threaded, tdata);
     pthread_join(threadInstances[0], NULL);
 
 
     std::cout << "No thread:" << std::endl;
-    test_materialize_row_table_threaded(tdata);
-    test_materialize_col_table_threaded(tdata);
+    test_scan_count_row_table_threaded(tdata);
+    test_scan_count_col_table_threaded(tdata);
 
     return 0;
 }

@@ -60,6 +60,22 @@ std::vector<int32_t> *ColumnStoreTable::table_eq_scan(const int32_t &columnId, c
     return result;
 }
 
+//int32_t *ColumnStoreTable::table_eq_array(const int32_t &columnId, const int32_t &value)
+//{
+//    int32_t* result = new int32_t[m_maxRows];
+//    size_t index = 0;
+//
+//    int32_t *start = &m_data[columnId * m_maxRows];
+//    for (auto row = 0; row < m_maxRows; ++row)
+//    {
+//        if (start[row] == value)
+//        {
+//            result[index++] = row;
+//        }
+//    }
+//    return result;
+//}
+
 int32_t ColumnStoreTable::table_eq_count(const int32_t &columnId, const int32_t &value)
 {
     int32_t result = 0;
