@@ -26,8 +26,8 @@ int main(int argc, char const *argv[])
 
 
     std::ofstream out("times_scan.csv");
-    out << "rows,columns,selectivity,row store,col store,row store (count),col store (count)" << std::endl;
-    std::cout << "rows,columns,selectivity,row store,col store,row store (count),col store (count)" << std::endl;
+    out << "rows,columns,selectivity,row store,col store,row store (count),col store (count),row store (array),col store (array)" << std::endl;
+    std::cout << "rows,columns,selectivity,row store,col store,row store (count),col store (count),row store (array),col store (array)" << std::endl;
 
     auto comparison_value = 10000001;
     auto scan_column = 0;
@@ -53,7 +53,7 @@ int main(int argc, char const *argv[])
             column_table.addDataWithSelectivity(selectivity, scan_column, comparison_value);
 
             // scan tables
-            // -> row - list
+            // -> row - vector
             auto start = std::chrono::high_resolution_clock::now();
             for (int32_t round = 0; round != rounds; ++round) {
                 auto result = row_table.table_eq_scan(scan_column, comparison_value);
@@ -61,6 +61,15 @@ int main(int argc, char const *argv[])
             }
             auto end = std::chrono::high_resolution_clock::now();
             auto scanTime_row = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / rounds;
+
+            // -> row - array
+            start = std::chrono::high_resolution_clock::now();
+            for (int32_t round = 0; round != rounds; ++round) {
+                auto result = row_table.table_eq_array(scan_column, comparison_value);
+                delete result;
+            }
+            end = std::chrono::high_resolution_clock::now();
+            auto scanArrayTime_row = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / rounds;
 
             // -> row - count
             start = std::chrono::high_resolution_clock::now();
@@ -70,7 +79,8 @@ int main(int argc, char const *argv[])
             end = std::chrono::high_resolution_clock::now();
             auto countTime_row = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / rounds;
 
-            // -> col
+
+            // -> col - vector
             start = std::chrono::high_resolution_clock::now();
             for (int32_t round = 0; round != rounds; ++round) {
                 auto result = column_table.table_eq_scan(scan_column, comparison_value);
@@ -79,6 +89,16 @@ int main(int argc, char const *argv[])
             end = std::chrono::high_resolution_clock::now();
             auto scanTime_col = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / rounds;
 
+            // -> col - array
+            start = std::chrono::high_resolution_clock::now();
+            for (int32_t round = 0; round != rounds; ++round) {
+                auto result = column_table.table_eq_array(scan_column, comparison_value);
+                delete result;
+            }
+            end = std::chrono::high_resolution_clock::now();
+            auto scanArrayTime_col = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / rounds;
+
+            // -> col - count
             start = std::chrono::high_resolution_clock::now();
             for (int32_t round = 0; round != rounds; ++round) {
                 auto result = column_table.table_eq_count(scan_column, comparison_value);
@@ -87,8 +107,8 @@ int main(int argc, char const *argv[])
             auto countTime_col = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / rounds;
 
             // output results
-            out << rows << "," << columns << "," << selectivity << "," << scanTime_row << "," << scanTime_col << "," << countTime_row << "," << countTime_col << std::endl;
-            std::cout << rows << "," << columns << "," << selectivity << "," << scanTime_row << "," << scanTime_col << "," << countTime_row << "," << countTime_col << std::endl;
+            out << rows << "," << columns << "," << selectivity << "," << scanTime_row << "," << scanTime_col << "," << countTime_row << "," << countTime_col << "," << scanArrayTime_row << "," << scanArrayTime_col << std::endl;
+            std::cout << rows << "," << columns << "," << selectivity << "," << scanTime_row << "," << scanTime_col << "," << countTime_row << "," << countTime_col << "," << scanArrayTime_row << "," << scanArrayTime_col << std::endl;
 
         }
 

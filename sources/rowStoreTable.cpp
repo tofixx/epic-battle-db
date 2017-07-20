@@ -64,6 +64,20 @@ std::vector<int32_t> *RowStoreTable::table_eq_scan(const int32_t &columnId, cons
     }
     return result;
 }
+int32_t *RowStoreTable::table_eq_array(const int32_t &columnId, const int32_t &value)
+{
+    int32_t* result = new int32_t[m_maxRows];
+    size_t index = 0;
+
+    for (auto row = 0; row < m_maxRows; ++row)
+    {
+        if (m_data[row * m_columns + columnId] == value)
+        {
+            result[index++] = row;
+        }
+    }
+    return result;
+}
 
 int32_t RowStoreTable::table_eq_count(const int32_t &columnId, const int32_t &value)
 {
