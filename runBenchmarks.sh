@@ -11,5 +11,5 @@ cmake --build .
 ./benchmark_update 1000000 100
 ./benchmark_updateLess 1000000 100
 ./benchmark_updateRandom 1000000 100
+./benchmark_threads 1000000 100 4
 ./benchmark_thread 1000000 100 8
-./benchmark_thread 1000000 100 4
