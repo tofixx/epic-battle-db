@@ -119,7 +119,7 @@ int main(int argc, char const *argv[])
 
 
         out << rows << "," << columns << "," << col_time << "," << col_i_time << "," << row_r_time << "," << row_i_time << "," << row_time << "," << row_ir_time << std::endl;
-        std::cout << rows << "," << columns << "," << col_time << "," << col_i_time << "," << "," << row_r_time << "," << row_i_time << "," << row_time << "," << row_ir_time << std::endl;
+        std::cout << rows << "," << columns << "," << col_time << "," << col_i_time << "," << row_r_time << "," << row_i_time << "," << row_time << "," << row_ir_time << std::endl;
 
         delete rowData;
     }
