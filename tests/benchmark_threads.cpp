@@ -33,7 +33,8 @@ void *test_scan_count_row_table_threaded(void *threadarg)
         // scan
         auto start = std::chrono::high_resolution_clock::now();
         for (int32_t round = 0; round < my_data->rounds; ++round) {
-            t->table_eq_count(scan_column, comparison_value);
+            auto result = t->table_eq_scan(scan_column, comparison_value);
+            delete result;
         }
         auto end = std::chrono::high_resolution_clock::now();
         auto time = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / my_data->rounds;
@@ -64,7 +65,8 @@ void *test_scan_count_col_table_threaded(void *threadarg)
         // scan
         auto start = std::chrono::high_resolution_clock::now();
         for (int32_t round = 0; round < my_data->rounds; ++round) {
-            t->table_eq_count(scan_column, comparison_value);
+            auto result = t->table_eq_scan(scan_column, comparison_value);
+            delete result;
         }
         auto end = std::chrono::high_resolution_clock::now();
         auto time = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / my_data->rounds;
