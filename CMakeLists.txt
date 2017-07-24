@@ -21,6 +21,7 @@ add_executable (benchmark_updateLess tests/benchmark_updateLess.cpp)
 add_executable (benchmark_updateRandom tests/benchmark_updateRandom.cpp)
 add_executable (benchmark_threads tests/benchmark_threads.cpp)
 add_executable (benchmark_thread tests/benchmark_thread.cpp)
+add_executable (benchmark_threadSame tests/benchmark_threadSame.cpp)
 
 target_link_libraries (create table)
 target_link_libraries (scan table)
@@ -36,6 +37,8 @@ target_link_libraries (benchmark_threads table)
 target_link_libraries (benchmark_threads ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries (benchmark_thread table)
 target_link_libraries (benchmark_thread ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries (benchmark_threadSame table)
+target_link_libraries (benchmark_threadSame ${CMAKE_THREAD_LIBS_INIT})
 
 # test
 #include(CTest)
@@ -52,6 +55,7 @@ add_test (benchmarkUpdateRandomTest benchmark_updateRandom)
 if (UNIX)
     add_test (benchmarkThreadsTest benchmark_threads)
     add_test (benchmarkThreadTest benchmark_thread)
+    add_test (benchmarkThreadSameTest benchmark_threadSame)
 endif(UNIX)
 
 # optimization flags
